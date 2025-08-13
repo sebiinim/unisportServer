@@ -13,6 +13,6 @@ public class LessonController {
 
     @GetMapping(value = "/search/{lessonID}")
     public String getLessonbyID(@PathVariable("lessonID") String lessonID) {
-        return "첫 번째 레슨";
+        return lessonID + "번째 레슨";
     }
 }
