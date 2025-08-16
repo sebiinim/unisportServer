@@ -9,12 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDTO {
-    private String username;
+public class LoginDto {
+    private String loginId;
     private String password;
-
-    @Override
-    public String toString() {
-        return "username : " + username + ", password : " + password;
-    }
 }

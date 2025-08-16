@@ -1,76 +1,53 @@
 package com.example.unisportserver.service;
 
 import com.example.unisportserver.data.entity.UserEntity;
-import com.example.unisportserver.data.dto.UserDTO;
+import com.example.unisportserver.data.dto.UserDto;
+import com.example.unisportserver.data.mapper.UserMapper;
 import com.example.unisportserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserDTO createUser(UserDTO dto) {
-        if (dto.getId() == null || dto.getId().isBlank()) {
-            dto.setId(UUID.randomUUID().toString());
-        }
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
+
+    // 유저 생성
+    public UserDto createUser(UserDto userDto) {
         LocalDateTime now = LocalDateTime.now();
-        dto.setCreatedAt(now);
-        dto.setUpdatedAt(now);
+        userDto.setCreatedAt(now);
+        userDto.setUpdatedAt(now);
 
-        UserEntity entity = toEntity(dto);
-        UserEntity saved = userRepository.save(entity);
-        return toDTO(saved);
+        UserEntity userEntity = userMapper.toEntity(userDto);
+        userRepository.save(userEntity);
+
+        return userMapper.toDto(userEntity);
     }
 
-    public void deleteUser(String id) {
+    // id로 유저 삭제
+    public UserDto deleteUser(String id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("id : " + id + " user not found"));
+
+        UserDto deletedUserDto = userMapper.toDto(userEntity);
+
         userRepository.deleteById(id);
+
+        return deletedUserDto;
     }
 
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(user -> new UserDTO(
-                        user.getId(),
-                        user.getName(),
-                        user.getEmail(),
-                        user.getUniversity(),
-                        user.getMajor(),
-                        user.getGrade(),
-                        user.getBio(),
-                        user.getRating(),
-                        user.getReviewCount(),
-                        user.getCreatedAt(),
-                        user.getUpdatedAt()
-                ))
-                .collect(Collectors.toList());
-    }
+    // 모든 유저 검색
+    public List<UserDto> getAllUsers() {
+        List<UserEntity> userEntities = userRepository.findAll();
 
-    // DTO → Entity
-    private UserEntity toEntity(UserDTO dto) {
-        return UserEntity.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .email(dto.getEmail())
-                .createdAt(dto.getCreatedAt())
-                .updatedAt(dto.getUpdatedAt())
-                .build();
-    }
-
-    // Entity → DTO
-    private UserDTO toDTO(UserEntity entity) {
-        return UserDTO.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .email(entity.getEmail())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .build();
+        return userMapper.toDtoList(userEntities);
     }
 }

@@ -2,23 +2,22 @@ package com.example.unisportserver.controller;
 
 import com.example.unisportserver.data.dto.LessonDto;
 import com.example.unisportserver.service.LessonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/lessons")
 public class LessonController {
 
-    private LessonService lessonService;
-
-    @Autowired
-    public LessonController(LessonService lessonService){
-        this.lessonService = lessonService;
-    }
+    private final LessonService lessonService;
 
     @GetMapping(value = "/all")
-    public String getAllLessons() {
-        return "";
+    public List<LessonDto> getAllLessons() {
+        return lessonService.getAllLessons();
     }
 
     @GetMapping(value = "/{id}")
@@ -28,18 +27,12 @@ public class LessonController {
 
     @PostMapping
     public LessonDto createLesson(@RequestBody LessonDto lessonDto) {
-
-        String ID = lessonDto.getId();
-        String title =  lessonDto.getTitle();
-        String description = lessonDto.getDescription();
-        String sport = lessonDto.getSport();
-
-        return lessonService.saveLesson(ID, title, description, sport);
+        return lessonService.saveLesson(lessonDto);
     }
 
     @DeleteMapping(value = "/{id}")
-    public String deleteLessonById(@PathVariable String id) {
-        return null;
+    public LessonDto deleteLessonById(@PathVariable String id) {
+        return lessonService.deleteLessonById(id);
     }
 
 }

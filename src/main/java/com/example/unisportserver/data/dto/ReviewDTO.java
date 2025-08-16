@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class ReviewDTO {
     private String id;
     private LessonDto lesson;    // 리뷰 대상 수업
-    private UserDTO student;     // 리뷰 작성자
+    private UserDto student;     // 리뷰 작성자
     private double rating;
     private String comment;
     private LocalDateTime createdAt;

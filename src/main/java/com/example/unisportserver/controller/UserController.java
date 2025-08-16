@@ -1,6 +1,7 @@
 package com.example.unisportserver.controller;
 
-import com.example.unisportserver.data.dto.UserDTO;
+import com.example.unisportserver.data.dto.UserDto;
+import com.example.unisportserver.repository.UserRepository;
 import com.example.unisportserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,24 +14,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    // 유저 생성
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO request) {
-        return ResponseEntity.ok(userService.createUser(request));
+    public UserDto createUser(@RequestBody UserDto request) {
+        return userService.createUser(request);
     }
 
-    // 유저 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        userService.deleteUser(id);
-        return ResponseEntity.ok().build();
+    public UserDto deleteUser(@PathVariable String id) {
+        return userService.deleteUser(id);
     }
 
-    //
     @GetMapping()
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public List<UserDto> getAllUsers() {
+        return userService.getAllUsers();
     }
 
 }
