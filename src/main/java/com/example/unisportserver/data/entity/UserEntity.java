@@ -1,12 +1,20 @@
-package com.example.unisportserver.dto;
+package com.example.unisportserver.data.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "users")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class UserDTO {
+public class UserEntity {
+
+    @Id
     private String id;
+
     private String name;
     private String email;
     private String university;

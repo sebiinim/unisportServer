@@ -1,4 +1,4 @@
-package com.example.unisportserver.dto;
+package com.example.unisportserver.data.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,18 +1,15 @@
-package com.example.unisportserver.dto;
+package com.example.unisportserver.data.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LessonDTO {
+@Builder
+public class LessonDto {
     private String id;
     private String title;
     private String description;
@@ -25,4 +22,5 @@ public class LessonDTO {
     private List<LessonScheduleDTO> schedule;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 }

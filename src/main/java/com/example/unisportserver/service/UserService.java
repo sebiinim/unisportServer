@@ -1,7 +1,7 @@
 package com.example.unisportserver.service;
 
-import com.example.unisportserver.domain.UserEntity;
-import com.example.unisportserver.dto.UserDTO;
+import com.example.unisportserver.data.entity.UserEntity;
+import com.example.unisportserver.data.dto.UserDTO;
 import com.example.unisportserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
