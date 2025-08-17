@@ -4,21 +4,23 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Table(name = "lesson")
 public class LessonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    String id;
+    private long id;
 
-    String title;
+    private String title;
 
-    String description;
+    private String description;
 
-    String sport;
+    private String sport;
 }

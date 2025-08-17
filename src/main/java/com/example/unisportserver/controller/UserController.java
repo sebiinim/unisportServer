@@ -1,7 +1,7 @@
 package com.example.unisportserver.controller;
 
 import com.example.unisportserver.data.dto.UserDto;
-import com.example.unisportserver.repository.UserRepository;
+import com.example.unisportserver.data.repository.UserRepository;
 import com.example.unisportserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -3,12 +3,12 @@ package com.example.unisportserver.data.mapper;
 import com.example.unisportserver.data.dto.LessonDto;
 import com.example.unisportserver.data.entity.LessonEntity;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface LessonMapper {
+
     LessonEntity toEntity(LessonDto lessonDto);
 
     LessonDto toDto(LessonEntity entity);
