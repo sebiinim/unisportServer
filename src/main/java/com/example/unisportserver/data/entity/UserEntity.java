@@ -18,6 +18,9 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String loginId;
+    private String password;
+
     private String name;
     private String email;
 
@@ -25,7 +28,7 @@ public class UserEntity {
     private String major;
 
     private int grade;
-    private double rating;
+    private int rating;
     private int reviewCount;
 
     private LocalDateTime createdAt;
