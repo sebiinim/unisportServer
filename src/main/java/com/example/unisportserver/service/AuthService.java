@@ -6,8 +6,10 @@ import com.example.unisportserver.data.dto.UserDto;
 import com.example.unisportserver.data.entity.UserEntity;
 import com.example.unisportserver.data.mapper.UserMapper;
 import com.example.unisportserver.data.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.NoSuchElementException;
 
@@ -34,7 +36,9 @@ public class AuthService {
             userEntity.setPassword(null);
             return userMapper.toDto(userEntity);
         } else {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "password error"
+            );
         }
     }
 

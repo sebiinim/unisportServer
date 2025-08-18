@@ -10,7 +10,10 @@ import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.ReviewRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,11 +38,15 @@ public class ReviewService {
 
         // 레슨이 있는지 확인
         LessonEntity lessonEntity = lessonRepository.findById(reviewCreateRequestDto.getLessonId())
-                .orElseThrow(() -> new IllegalArgumentException("lesson not found, Id : " +  reviewCreateRequestDto.getLessonId()));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,  String.format("Lesson with id %s not found", reviewCreateRequestDto.getLessonId())
+                        ));
 
         // 유저가 있는지 확인
         UserEntity userEntity = userRepository.findById((reviewCreateRequestDto.getUserId()))
-                .orElseThrow(() -> new IllegalArgumentException(("user not found, Id : " + reviewCreateRequestDto.getUserId())));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,  String.format("User with id %s not found", reviewCreateRequestDto.getUserId())
+                        ));
 
         // ReviewEntity 만들고 DB에 save
         ReviewEntity reviewEntity = reviewMapper.toEntity(reviewCreateRequestDto, lessonEntity, userEntity);

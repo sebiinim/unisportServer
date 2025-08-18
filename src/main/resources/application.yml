@@ -1,6 +1,6 @@
 spring:
   datasource:
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:com.mysql.cj.jdbc.Driver}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
@@ -17,3 +17,8 @@ spring:
 server:
   port: ${PORT:8080}     # Render가 주는 $PORT 사용, 없으면 8080
   address: 0.0.0.0       # 외부에서 접근 가능
+
+  error:
+    include-message: always          # 예외 메시지 포함
+    include-binding-errors: always   # 바인딩(검증) 에러도 포함
+    include-stacktrace: on_param     # URL에 ?trace=true 붙였을 때만 스택트레이스 표시

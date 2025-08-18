@@ -7,10 +7,11 @@ import com.example.unisportserver.data.mapper.LessonMapper;
 import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,8 +36,8 @@ public class LessonService {
 
     // id로 레슨 검색
     public LessonDto getLessonById(Long id) {
-        LessonEntity lessonEntity = lessonRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("id : " + id + " lesson not found"));
-
+        LessonEntity lessonEntity = lessonRepository.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("lesson with id %d not found", id) ));
         return lessonMapper.toDto(lessonEntity);
     }
 
@@ -51,10 +52,14 @@ public class LessonService {
     @Transactional
     public LessonDto saveLesson(LessonDto lessonDto) {
         UserEntity instructorUser = userRepository.findById(lessonDto.getInstructorUserId())
-                .orElseThrow(()-> new IllegalArgumentException("userId : " + lessonDto.getInstructorUserId() + " instructor not found"));
+                .orElseThrow(()-> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND, String.format("User with id %s not found", lessonDto.getInstructorUserId())
+                        ));
 
         if(lessonRepository.existsByInstructorUserId(instructorUser.getId())){
-            throw new IllegalStateException("userId : " + instructorUser.getId() + " instructor already has a lesson");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, String.format("User with id %s already has a lesson", instructorUser.getId())
+            );
         }
 
         LessonEntity lessonEntity = lessonMapper.toEntity(lessonDto);
@@ -66,7 +71,9 @@ public class LessonService {
 
     // id로 레슨 삭제
     public LessonDto deleteLessonById(Long id) {
-        LessonEntity lessonEntity = lessonRepository.findById(id).orElseThrow(() -> new  IllegalArgumentException("id : " + id + " lesson not found"));
+        LessonEntity lessonEntity = lessonRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, String.format("Lesson with id %s not found", id)
+                ));
 
         lessonRepository.delete(lessonEntity);
 
