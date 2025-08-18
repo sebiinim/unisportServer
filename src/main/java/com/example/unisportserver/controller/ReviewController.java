@@ -20,9 +20,8 @@ public class ReviewController {
         return reviewService.saveReview(reviewCreateRequestDto);
     }
 
-    // TODO : 빨래를 널고 와서 리뷰 GET을 만들어봅시다.
-    @GetMapping
-    public List<ReviewResponseDto> getAllReviews(@PathVariable Long lessonId) {
+    @GetMapping(value = "{lessonId}")
+    public List<ReviewResponseDto> getAllReviewsByLessonId(@PathVariable Long lessonId) {
         return reviewService.getReviewsByLessonId(lessonId);
     }
 }

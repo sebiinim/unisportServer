@@ -2,6 +2,7 @@ package com.example.unisportserver.service;
 
 import com.example.unisportserver.data.dto.ReviewCreateRequestDto;
 import com.example.unisportserver.data.dto.ReviewResponseDto;
+import com.example.unisportserver.data.dto.UserDto;
 import com.example.unisportserver.data.entity.LessonEntity;
 import com.example.unisportserver.data.entity.ReviewEntity;
 import com.example.unisportserver.data.entity.UserEntity;
@@ -33,6 +34,7 @@ public class ReviewService {
         this.userRepository = userRepository;
     }
 
+    // 레슨 생성
     @Transactional
     public ReviewResponseDto saveReview(ReviewCreateRequestDto reviewCreateRequestDto) {
 
@@ -58,9 +60,12 @@ public class ReviewService {
         return reviewMapper.toResponseDto(reviewEntity);
     }
 
+    // 레슨별 리뷰 검색
     public List<ReviewResponseDto> getReviewsByLessonId(Long lessonId) {
-        List<ReviewEntity> reviewEntityList = reviewRepository.findAllById(lessonId);
+        List<ReviewEntity> reviewEntityList = reviewRepository.findAllByLesson_Id(lessonId);
 
         return reviewMapper.toResponseDtoList(reviewEntityList);
     }
+
+    //
 }

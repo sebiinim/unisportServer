@@ -36,7 +36,6 @@ public class LessonController {
         return lessonService.getLessonsByDate(date);
     }
 
-
     @DeleteMapping(value = "/{id}")
     public LessonDto deleteLessonById(@PathVariable Long id) {
         return lessonService.deleteLessonById(id);
