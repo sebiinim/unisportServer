@@ -22,6 +22,7 @@ public class UserService {
     }
 
     // 유저 생성
+    // TODO: 유저와 레슨 리턴할 때 id 포함하도록 Dto 수정 필요
     public UserDto createUser(UserDto userDto) {
         LocalDateTime now = LocalDateTime.now();
         userDto.setCreatedAt(now);

@@ -15,7 +15,7 @@ public class UserDto {
 
     private String university;
     private String major;
-    private int grade;      // 학년
+    private int grade;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

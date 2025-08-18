@@ -16,7 +16,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String loginId;
     private String password;
@@ -27,9 +27,9 @@ public class UserEntity {
     private String university;
     private String major;
 
-    private int grade;
-    private int rating;
-    private int reviewCount;
+    private Integer grade;
+    private Integer rating;
+    private Integer reviewCount;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
