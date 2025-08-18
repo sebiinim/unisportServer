@@ -22,7 +22,7 @@ public class ReviewController {
 
     // TODO : 빨래를 널고 와서 리뷰 GET을 만들어봅시다.
     @GetMapping
-    public List<ReviewResponseDto> getAllReviews() {
-        return null;
+    public List<ReviewResponseDto> getAllReviews(@PathVariable Long lessonId) {
+        return reviewService.getReviewsByLessonId(lessonId);
     }
 }

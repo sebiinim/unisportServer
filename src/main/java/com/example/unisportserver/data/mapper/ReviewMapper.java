@@ -24,6 +24,13 @@ public interface ReviewMapper {
     ReviewResponseDto toResponseDto(ReviewEntity reviewEntity);
 
     @Mappings({
+            @Mapping(target = "id", source = "id"),
+            @Mapping(target = "lessonId", source = "lesson.id"),
+            @Mapping(target = "userId", source = "user.id")
+    })
+    List<ReviewResponseDto> toResponseDtoList(List<ReviewEntity> reviewEntityList);
+
+    @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "lesson", source = "lessonEntity"),
             @Mapping(target = "user", source = "userEntity"),

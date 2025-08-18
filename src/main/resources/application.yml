@@ -1,6 +1,6 @@
 spring:
   datasource:
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:com.mysql.cj.jdbc.Driver}
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
@@ -12,3 +12,4 @@ spring:
     properties:
       hibernate:
         format_sql: ${SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}
+    database-platform: ${SPRING_JPA_DATABASE_PLATFORM}
