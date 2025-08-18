@@ -35,7 +35,7 @@ public class UserService {
     }
 
     // id로 유저 삭제
-    public UserDto deleteUser(String id) {
+    public UserDto deleteUser(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("id : " + id + " user not found"));
 
         UserDto deletedUserDto = userMapper.toDto(userEntity);

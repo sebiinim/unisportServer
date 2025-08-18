@@ -12,6 +12,9 @@ import java.time.LocalTime;
 @Builder
 public class LessonDto {
 
+    @Schema(example = "null")
+    private Long id;
+
     @Schema(example = "축구")
     private String sport;
 
@@ -28,7 +31,7 @@ public class LessonDto {
     private String location;
 
     @Schema(example = "1")
-    private String instructorUserId;
+    private Long instructorUserId;
 
     @Schema(example = "2025-08-18")
     private LocalDate lessonDate;

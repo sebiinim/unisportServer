@@ -16,13 +16,13 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @PostMapping
-    public UserDto createUser(@RequestBody UserDto request) {
-        return userService.createUser(request);
-    }
+//    @PostMapping
+//    public UserDto createUser(@RequestBody UserDto request) {
+//        return userService.createUser(request);
+//    }
 
     @DeleteMapping("/{id}")
-    public UserDto deleteUser(@PathVariable String id) {
+    public UserDto deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);
     }
 

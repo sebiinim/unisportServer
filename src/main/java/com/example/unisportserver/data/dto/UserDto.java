@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class UserDto {
+    private Long id;
 
     private String loginId;
     private String password;
