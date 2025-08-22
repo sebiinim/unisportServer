@@ -14,8 +14,7 @@ public class RegisterDto {
     private String email;
 
     private String university;
-    private String major;
-    private int grade;      // 학년
+    private String studentId;     // 학번
 }
 
 // TODO: id 없애기 위해 Dto 분리 필요

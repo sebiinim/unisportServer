@@ -25,9 +25,8 @@ public class UserEntity {
     private String email;
 
     private String university;
-    private String major;
+    private String studentId;
 
-    private Integer grade;
     private Integer rating;
     private Integer reviewCount;
 
