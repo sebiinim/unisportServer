@@ -11,6 +11,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 public class LessonDto {
+    
+    // TODO: 수업에 사진을 추가해봅시다
 
     @Schema(example = "null")
     private Long id;
@@ -25,7 +27,7 @@ public class LessonDto {
     private String description;
 
     @Schema(example = "1")
-    private String level;
+    private Integer level;
 
     @Schema(example = "화정체육관")
     private String location;

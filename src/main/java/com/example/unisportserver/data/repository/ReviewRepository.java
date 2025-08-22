@@ -1,8 +1,8 @@
 package com.example.unisportserver.data.repository;
 
-import com.example.unisportserver.data.entity.LessonEntity;
 import com.example.unisportserver.data.entity.ReviewEntity;
-import com.example.unisportserver.data.entity.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
     List<ReviewEntity> findAllById(Long lessonId);
 
-    List<ReviewEntity> findAllByLesson_Id(Long lessonId);
+    Page<ReviewEntity> findAllByLessonId(Long lessonId, Pageable pageable);
 
-    List<ReviewEntity> findAllByUser_Id(Long userId);
+    List<ReviewEntity> findAllByUserId(Long userId);
 }

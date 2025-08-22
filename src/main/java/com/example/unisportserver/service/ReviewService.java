@@ -11,6 +11,8 @@ import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.ReviewRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -61,10 +63,8 @@ public class ReviewService {
     }
 
     // 레슨별 리뷰 검색
-    public List<ReviewResponseDto> getReviewsByLessonId(Long lessonId) {
-        List<ReviewEntity> reviewEntityList = reviewRepository.findAllByLesson_Id(lessonId);
-
-        return reviewMapper.toResponseDtoList(reviewEntityList);
+    public Page<ReviewResponseDto> getReviewsByLessonId(Long lessonId, Pageable pageable) {
+        return reviewRepository.findAllByLessonId(lessonId, pageable).map(reviewMapper::toResponseDto);
     }
 
     //

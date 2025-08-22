@@ -20,5 +20,3 @@ public class UserDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
-
-// TODO: id 없애기 위해 Dto 분리 필요

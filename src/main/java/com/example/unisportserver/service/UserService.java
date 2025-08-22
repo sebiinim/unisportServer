@@ -24,8 +24,9 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    // 유저 생성이 Auth 쪽으로 가서 deprecated
     // TODO: 유저와 레슨 리턴할 때 id 포함하도록 Dto 수정 필요
+
+    // 유저 생성이 Auth 쪽으로 가서 deprecated
 //    public UserDto createUser(UserDto userDto) {
 //        LocalDateTime now = LocalDateTime.now();
 //        userDto.setCreatedAt(now);

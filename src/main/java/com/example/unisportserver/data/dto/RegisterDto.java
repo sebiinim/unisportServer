@@ -16,5 +16,3 @@ public class RegisterDto {
     private String university;
     private String studentId;     // 학번
 }
-
-// TODO: id 없애기 위해 Dto 분리 필요

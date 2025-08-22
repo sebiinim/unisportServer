@@ -28,7 +28,7 @@ public class LessonEntity {
 
     private String description;
 
-    private String level;
+    private Integer level;
 
     private String location;
 

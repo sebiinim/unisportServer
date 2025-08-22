@@ -3,8 +3,14 @@ package com.example.unisportserver.controller;
 import com.example.unisportserver.data.dto.LessonDto;
 import com.example.unisportserver.service.LessonService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,7 +26,7 @@ public class LessonController {
     private final LessonService lessonService;
 
     @PostMapping
-    @Operation(summary = "레슨 등록", description = "DTO를 잘 보고 사용해주세요")
+    @Operation(summary = "레슨 생성", description = "DTO를 잘 보고 사용해주세요")
     public LessonDto createLesson(@RequestBody LessonDto lessonDto) {
         return lessonService.saveLesson(lessonDto);
     }
@@ -37,8 +43,26 @@ public class LessonController {
         return lessonService.getLessonById(id);
     }
 
-    @GetMapping(value = "by-date")
-    @Operation(summary = "특정 날짜의 레슨 검색", description = "날짜 형식은 2004-12-19")
+    @GetMapping(value = "/by-sport/{sport}")
+    @Operation(summary = "스포츠명으로 레슨 검색", description = "프론트에서 스포츠명을 지정해서 검색하게 해야할듯")
+    public List<LessonDto> getLessonsBySport(@PathVariable String sport) {
+        return lessonService.getLessonsBySport(sport);
+    }
+
+    @GetMapping(value = "/by-keyword")
+    @Operation(summary = "임의 키워드로 검색", description = "레슨 통합 검색 기능, 페이지로 제공함에 유의")
+    public Page<LessonDto> searchAnyField(@RequestParam("q") String q, @Parameter(hidden = true) Pageable pageable) {
+        return lessonService.searchSimple(q, pageable);
+    }
+
+    @GetMapping(value = "/by-level/{level}")
+    @Operation(summary = "레벨로 검색")
+    public List<LessonDto> getLessonsByLevel(@PathVariable Integer level) {
+        return lessonService.getLessonsByLevel(level);
+    }
+
+    @GetMapping(value = "/by-date")
+    @Operation(summary = "날짜로 레슨 검색", description = "날짜 형식은 2004-12-19")
     public List<LessonDto> getLessonsByDate(@RequestParam LocalDate date) {
         return lessonService.getLessonsByDate(date);
     }

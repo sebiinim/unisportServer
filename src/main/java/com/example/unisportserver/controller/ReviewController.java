@@ -4,8 +4,13 @@ import com.example.unisportserver.data.dto.ReviewCreateRequestDto;
 import com.example.unisportserver.data.dto.ReviewResponseDto;
 import com.example.unisportserver.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,9 +29,19 @@ public class ReviewController {
         return reviewService.saveReview(reviewCreateRequestDto);
     }
 
-    @GetMapping(value = "{lessonId}")
-    @Operation(summary = "레슨 리뷰 검색", description = "레슨의 모든 리뷰를 검색")
-    public List<ReviewResponseDto> getAllReviewsByLessonId(@PathVariable Long lessonId) {
-        return reviewService.getReviewsByLessonId(lessonId);
+    @GetMapping(value = "/rating/{lessonId}")
+    @Operation(summary = "레슨 리뷰 검색(추천순 정렬)", description = "레슨의 모든 리뷰를 검색")
+    public Page<ReviewResponseDto> getAllReviewsByLessonIdOrderByRatingDesc(
+            @PathVariable Long lessonId,
+            @PageableDefault(size = 10, sort = "rating", direction = Sort.Direction.DESC) @Parameter(hidden = true) Pageable pageable) {
+        return reviewService.getReviewsByLessonId(lessonId, pageable);
+    }
+
+    @GetMapping(value = "/latest/{lessonId}")
+    @Operation(summary = "레슨 리뷰 검색(최신순 정렬)", description = "레슨의 모든 리뷰를 검색")
+    public Page<ReviewResponseDto> getAllReviewsByLessonIdOrderByDateDesc(
+            @PathVariable Long lessonId,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) @Parameter(hidden = true) Pageable pageable) {
+        return reviewService.getReviewsByLessonId(lessonId, pageable);
     }
 }
