@@ -44,9 +44,9 @@ public class UserController {
     @Operation(summary = "강사 등록", description = "유저 id, 강사 학번, 사진을 등록. 저장 등 구현은 나중에 하고 메시지 리턴")
     public String verifyInstructor(
         @PathVariable Long id,
-        @RequestPart("studentId") String studentId,
+        @RequestPart("studentNumber") String studentNumber,
         @RequestPart("photo") MultipartFile photo) {
 
-        return userService.verifyInstructor(id, studentId, photo);
+        return userService.verifyInstructor(id, studentNumber, photo);
     }
 }

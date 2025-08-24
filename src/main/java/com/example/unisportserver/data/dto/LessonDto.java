@@ -2,6 +2,7 @@ package com.example.unisportserver.data.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,6 +32,8 @@ public class LessonDto {
 
     @Schema(example = "화정체육관")
     private String location;
+
+    private MultipartFile image;
 
     @Schema(example = "1")
     private Long instructorUserId;

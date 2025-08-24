@@ -57,13 +57,13 @@ public class UserService {
     }
 
     // 강사 인증 요청
-    public String verifyInstructor(Long id, String studentId, MultipartFile photo) {
+    public String verifyInstructor(Long id, String studentNumber, MultipartFile photo) {
 
         UserEntity user = userRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("userId" + id + "not found"));
 
         return "관리자 검토 후 연락드리겠습니다! \n\n" +
                 "userId : " + id + ",\n\n" +
-                "studentId : " + studentId;
+                "studentNumber : " + studentNumber;
     }
 }

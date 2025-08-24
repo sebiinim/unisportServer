@@ -15,7 +15,7 @@ public class UserDto {
     private String email;
 
     private String university;
-    private String studentId;
+    private String studentNumber;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -37,5 +37,4 @@ public class LessonEntity {
     private LocalDate lessonDate;
 
     private LocalTime lessonTime;
-
 }

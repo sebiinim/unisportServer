@@ -54,7 +54,7 @@ public class AuthService {
                 .name(registerDto.getName())
                 .email(registerDto.getEmail())
                 .university(registerDto.getUniversity())
-                .studentId(registerDto.getStudentId())
+                .studentNumber(registerDto.getStudentNumber())
                 .rating(0)
                 .reviewCount(0)
                 .createdAt(LocalDateTime.now())

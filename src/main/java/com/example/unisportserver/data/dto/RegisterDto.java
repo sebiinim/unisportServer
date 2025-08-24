@@ -14,5 +14,5 @@ public class RegisterDto {
     private String email;
 
     private String university;
-    private String studentId;     // 학번
+    private String studentNumber;     // 학번
 }
