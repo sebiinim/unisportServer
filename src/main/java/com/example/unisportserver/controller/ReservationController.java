@@ -11,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +33,7 @@ public class ReservationController {
 
     @GetMapping(value = "/{userId}")
     @Operation(summary = "내 예약 조회", description = "유저의 전체 예약을 조회")
-    public Page<ReservationResponseDto> getReservationsByUserId(@RequestParam Long userId, Pageable pageable) {
+    public Page<ReservationResponseDto> getReservationsByUserId(@PathVariable Long userId, Pageable pageable) {
         return reservationService.getReservationsByUserId(userId, pageable);
     }
 

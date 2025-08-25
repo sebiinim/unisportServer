@@ -40,8 +40,8 @@ public class UserService {
 
     // id로 유저 삭제
     public UserDto deleteUser(Long id) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user with id %d not found", id)));
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user with id %d not found", id)));
         UserDto deletedUserDto = userMapper.toDto(userEntity);
 
         userRepository.deleteById(id);
@@ -54,6 +54,14 @@ public class UserService {
         List<UserEntity> userEntities = userRepository.findAll();
 
         return userMapper.toDtoList(userEntities);
+    }
+
+    // id로 유저 검색
+    public UserDto getUserById(Long id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user with id %d not found", id))
+        );
+        return userMapper.toDto(userEntity);
     }
 
     // 강사 인증 요청

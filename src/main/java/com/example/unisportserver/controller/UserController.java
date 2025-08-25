@@ -28,7 +28,7 @@ public class UserController {
 //        return userService.createUser(request);
 //    }
 
-    @DeleteMapping("/{id}") 
+    @DeleteMapping(value ="/{id}")
     @Operation(summary = "유저 삭제", description = "유저 id를 이용하여 유저 삭제")
     public UserDto deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);
@@ -38,6 +38,12 @@ public class UserController {
     @Operation(summary = "모든 유저 검색", description = "모든 유저 리스트를 반환")
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping(value = "/{id}")
+    @Operation(summary = "userId로 유저 검색", description = "유저 id로 유저 한 명 검색")
+    public UserDto getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
     @PostMapping(value = "/instructor-verification/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
