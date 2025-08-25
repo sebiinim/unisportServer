@@ -36,7 +36,7 @@ public class ReviewService {
         this.userRepository = userRepository;
     }
 
-    // 레슨 생성
+    // 리뷰 생성
     @Transactional
     public ReviewResponseDto saveReview(ReviewCreateRequestDto reviewCreateRequestDto) {
 

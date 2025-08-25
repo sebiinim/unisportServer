@@ -27,11 +27,13 @@ public class AuthService {
     }
 
     public UserDto login(LoginDto loginDto){
+        // loginId로 유저 검색
         UserEntity userEntity = userRepository.findByLoginId(loginDto.getLoginId()).
                 orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+        // 비밀번호가 일치할 때만 유저 정보 리턴하기
         if (encoder.matches(loginDto.getPassword(), userEntity.getPassword())) {
             userEntity.setPassword(null);
             return userMapper.toDto(userEntity);

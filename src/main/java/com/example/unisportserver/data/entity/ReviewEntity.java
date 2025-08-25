@@ -7,8 +7,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "review", uniqueConstraints = @UniqueConstraint(
-        name = "uk_review_lesson_student", columnNames = {"lesson_id", "student_id"}))
+@Table(name = "review",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_review_lesson_student", columnNames = {"lesson_id", "student_id"}
+        ))
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class ReviewEntity {
