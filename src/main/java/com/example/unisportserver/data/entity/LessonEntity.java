@@ -36,6 +36,7 @@ public class LessonEntity {
     
     private Integer capacity;           // 수업 정원
 
+    @Enumerated(EnumType.STRING)
     private LessonReservationStatus status;     // 정원 상태
 
     private Long instructorUserId;

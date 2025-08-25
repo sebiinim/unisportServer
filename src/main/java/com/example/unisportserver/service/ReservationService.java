@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -55,10 +56,17 @@ public class ReservationService {
         return reservationResponseDto;
     }
 
-    // userId로 예약 조회
+    // userId로 전체 예약 조회
     @Transactional
     public Page<ReservationResponseDto> getReservationsByUserId(Long userId, Pageable pageable) {
 
         return reservationRepository.findAllByUserId(userId, pageable).map(reservationMapper::toDto);
+    }
+
+    // userId로 예약 조회
+    @Transactional
+    public Page<ReservationResponseDto> getReservationsByUserIdAndDate(Long userId, LocalDate date, Pageable pageable) {
+
+        return reservationRepository.findAllByUser_IdAndLesson_LessonDate(userId, date, pageable).map(reservationMapper::toDto);
     }
 }
