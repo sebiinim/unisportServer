@@ -100,4 +100,6 @@ public class LessonService {
 
         return lessonMapper.toDto(lessonEntity);
     }
+
+    // TODO: sport로 조회 후 세부 조회 되도록
 }

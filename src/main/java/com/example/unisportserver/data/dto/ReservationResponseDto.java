@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReservationResponseDto {
 
-    private Long reservationId;
+    private Long id;
 
     private Long userId;
 

@@ -16,8 +16,10 @@ public interface ReservationMapper {
     ReservationEntity toEntity(ReservationRequestDto reservationRequestDto);
 
     @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "lessonId", source = "lesson.id")
     ReservationResponseDto toDto(ReservationEntity reservationEntity);
 
+    @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "lessonId", source = "lesson.id")
     List<ReservationResponseDto> toDtoList(List<ReservationEntity> reservationEntityList);
 
