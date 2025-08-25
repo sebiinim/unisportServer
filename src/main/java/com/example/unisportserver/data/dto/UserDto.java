@@ -17,6 +17,8 @@ public class UserDto {
     private String university;
     private String studentNumber;
 
+    private Boolean isInstructor;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

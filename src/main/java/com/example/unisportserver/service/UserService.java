@@ -24,20 +24,6 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    // TODO: 유저와 레슨 리턴할 때 id 포함하도록 Dto 수정 필요
-
-    // 유저 생성이 Auth 쪽으로 가서 deprecated
-//    public UserDto createUser(UserDto userDto) {
-//        LocalDateTime now = LocalDateTime.now();
-//        userDto.setCreatedAt(now);
-//        userDto.setUpdatedAt(now);
-//
-//        UserEntity userEntity = userMapper.toEntity(userDto);
-//        userRepository.save(userEntity);
-//
-//        return userMapper.toDto(userEntity);
-//    }
-
     // id로 유저 삭제
     public UserDto deleteUser(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(
@@ -70,8 +56,10 @@ public class UserService {
         UserEntity user = userRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("userId" + id + "not found"));
 
-        return "관리자 검토 후 연락드리겠습니다! \n\n" +
-                "userId : " + id + ",\n\n" +
-                "studentNumber : " + studentNumber;
+        user.setIsInstructor(Boolean.TRUE);
+
+        userRepository.save(user);
+
+        return "인증되었습니다!";
     }
 }

@@ -27,6 +27,8 @@ public class UserEntity {
     private String university;
     private String studentNumber;
 
+    private Boolean isInstructor;
+
     private Integer rating;
     private Integer reviewCount;
 
