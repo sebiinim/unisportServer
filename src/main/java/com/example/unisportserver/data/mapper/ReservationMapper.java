@@ -6,6 +6,8 @@ import com.example.unisportserver.data.dto.ReservationResponseDto;
 import com.example.unisportserver.data.entity.LessonEntity;
 import com.example.unisportserver.data.entity.ReservationEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 import java.util.List;
 
@@ -13,8 +15,10 @@ import java.util.List;
 public interface ReservationMapper {
     ReservationEntity toEntity(ReservationRequestDto reservationRequestDto);
 
+    @Mapping(target = "userId", source = "user.id")
     ReservationResponseDto toDto(ReservationEntity reservationEntity);
 
+    @Mapping(target = "lessonId", source = "lesson.id")
     List<ReservationResponseDto> toDtoList(List<ReservationEntity> reservationEntityList);
 
     List<ReservationEntity> toEntityList(List<ReservationResponseDto> reservationResponseDtoList);

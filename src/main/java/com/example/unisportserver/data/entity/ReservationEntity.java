@@ -21,12 +21,11 @@ public class ReservationEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private UserEntity userId;
+    private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")
-    private LessonEntity lessonId;
+    private LessonEntity lesson;
 
     private LocalDateTime createdAt;
-
 }
