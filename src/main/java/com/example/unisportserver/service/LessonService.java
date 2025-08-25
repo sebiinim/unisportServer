@@ -94,12 +94,10 @@ public class LessonService {
     public LessonDto deleteLessonById(Long id) {
         LessonEntity lessonEntity = lessonRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, String.format("Lesson with id %s not found", id)
-                ));
+        ));
 
         lessonRepository.delete(lessonEntity);
 
         return lessonMapper.toDto(lessonEntity);
     }
-
-    // TODO: sport로 조회 후 세부 조회 되도록
 }
