@@ -28,6 +28,9 @@ server:
     include-binding-errors: always   # 바인딩(검증) 에러도 포함
     include-stacktrace: on_param     # URL에 ?trace=true 붙였을 때만 스택트레이스 표시
 
-  # src/main/resources/application.yml
-openai:
-  api-key: ${OPENAI_API_KEY}
+#openai:
+#  api-key: ${OPENAI_API_KEY}
+
+logging:
+  level:
+    org.springframework.core.env: DEBUG
