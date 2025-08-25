@@ -31,4 +31,4 @@ server:
   # src/main/resources/application.yml
 openai:
   model: gpt-4.1   # 기본 모델 (원하면 gpt-5 로 교체)
-  api-key: ${CHATGPT_API_KEY}
+  api-key: ${OPENAI_API_KEY}

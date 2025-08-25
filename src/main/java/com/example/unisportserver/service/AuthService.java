@@ -45,6 +45,11 @@ public class AuthService {
     }
 
     public UserDto register(RegisterDto registerDto){
+        if (checkDuplicateId(registerDto.getLoginId())){
+            // 중복 아이디가 있으면 예외처리
+            throw new
+        }
+
         // registerDto 가지고 UserEntity 생성하기
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -67,5 +72,10 @@ public class AuthService {
         userRepository.save(userEntity);
 
         return userMapper.toDto(userEntity);
+    }
+
+    public boolean checkDuplicateId(String loginId){
+
+        return userRepository.findByLoginId(loginId).isPresent();
     }
 }

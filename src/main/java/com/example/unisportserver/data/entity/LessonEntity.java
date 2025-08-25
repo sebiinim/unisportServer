@@ -22,9 +22,9 @@ public class LessonEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sport;
+    private String sport;       // 대분류 (축구)
 
-    private String title;
+    private String title;       // 중분류 (중급 축구)
 
     private String description;
 
