@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://${PUBLIC_IP}/${DB_NAME}?cloudSqlInstance=${CLOUDSQL_INSTANCE}&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useUnicode=true&characterEncoding=&useSSL=true&serverTimezone=UTC"
+    url: "jdbc:mysql://${PUBLIC_IP}/${DB_NAME}?cloudSqlInstance=${CLOUDSQL_INSTANCE}&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC"
     username: ${DB_USERNAME}
     hikari:
       maximum-pool-size: 10
