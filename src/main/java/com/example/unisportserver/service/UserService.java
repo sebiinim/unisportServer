@@ -16,6 +16,8 @@ import java.util.List;
 @Service
 public class UserService {
 
+    // TODO: 정보 수정 API도 필요
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 

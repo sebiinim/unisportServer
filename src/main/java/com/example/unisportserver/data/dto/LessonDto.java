@@ -12,6 +12,7 @@ import java.time.LocalTime;
 public class LessonDto {
     
     // TODO: 수업에 사진을 추가해봅시다
+    // 배포가 다시 되면 좋겠다
 
     @Schema(example = "null")
     private Long id;
