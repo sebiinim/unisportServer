@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://google/${DB_NAME}
+    url: jdbc:mysql://${PUBLIC_IP:google}/${DB_NAME}
       ?cloudSqlInstance=${CLOUDSQL_INSTANCE}
       &socketFactory=com.google.cloud.sql.mysql.SocketFactory
       &useUnicode=true
