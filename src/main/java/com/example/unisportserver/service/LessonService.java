@@ -7,6 +7,7 @@ import com.example.unisportserver.data.mapper.LessonMapper;
 import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,17 +18,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LessonService {
 
     private final LessonRepository lessonRepository;
     private final LessonMapper lessonMapper;
     private final UserRepository userRepository;
-
-    public LessonService(LessonRepository lessonRepository, LessonMapper lessonMapper, UserRepository userRepository) {
-        this.lessonRepository = lessonRepository;
-        this.lessonMapper = lessonMapper;
-        this.userRepository = userRepository;
-    }
 
     // 레슨 생성
     @Transactional
