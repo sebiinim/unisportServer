@@ -1,13 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${PUBLIC_IP:google}/${DB_NAME}
-      ?cloudSqlInstance=${CLOUDSQL_INSTANCE}
-      &socketFactory=com.google.cloud.sql.mysql.SocketFactory
-      &useUnicode=true
-      &characterEncoding=utf8
-      &useSSL=true
-      &serverTimezone=UTC
+    url: "jdbc:mysql://${PUBLIC_IP}/${DB_NAME}?cloudSqlInstance=${CLOUDSQL_INSTANCE}&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useUnicode=true&characterEncoding=&useSSL=true&serverTimezone=UTC"
     username: ${DB_USERNAME}
     hikari:
       maximum-pool-size: 10
@@ -25,6 +19,7 @@ spring:
         format_sql: true
         jdbc.time_zone: UTC
     open-in-view: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 
   servlet:
     multipart:
@@ -46,3 +41,14 @@ server:
 logging:
   level:
     org.springframework.core.env: DEBUG
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,env
+  endpoint:
+    health:
+      probes:
+        enabled: true

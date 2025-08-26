@@ -38,7 +38,7 @@ public class AuthService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         // 비밀번호가 일치할 때만 유저 정보 리턴하기
-        if (encoder.matches(password, normalizer.Normalize(userEntity.getPassword()))) {
+        if (encoder.matches(password, userEntity.getPassword())) {
             userEntity.setPassword(null);
             return userMapper.toDto(userEntity);
         } else {
