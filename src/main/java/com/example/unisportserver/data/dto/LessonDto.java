@@ -8,8 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class LessonDto {
     

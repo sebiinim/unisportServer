@@ -6,6 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @Entity
 @Table(
     name = "lesson_like",

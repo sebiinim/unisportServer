@@ -1,13 +1,13 @@
 package com.example.unisportserver.data.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@Data
+@Getter @Setter @RequiredArgsConstructor
 @Entity
 @Table(name = "lesson_schedule")
 public class LessonScheduleEntity {
