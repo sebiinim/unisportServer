@@ -8,6 +8,8 @@ import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,15 +23,16 @@ public class LessonLikeService {
 
     public enum LikeResult { CREATED, ALREADY_EXISTS, DELETED, NOT_FOUND }
 
+    // 관심 레슨 등록
     @Transactional
     public LikeResult like(Long lessonId, Long userId) {
         if (lessonLikeRepository.existsByUserIdAndLessonId(userId, lessonId)) {
-            return LikeResult.ALREADY_EXISTS;   // 이미 좋아요 눌렀으면 무시
+            return LikeResult.ALREADY_EXISTS;   // 이미 관심 상태면 무시
         }
         UserEntity user =  userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("userid : " + userId + " not found"));
+                () -> new RuntimeException("userid : " + userId + " not found"));
         LessonEntity lesson = lessonRepository.findById(lessonId).orElseThrow(
-                () -> new IllegalArgumentException("lessonid : " + lessonId + " not found"));
+                () -> new RuntimeException("lessonid : " + lessonId + " not found"));
 
         LessonLikeEntity lessonLikeEntity = LessonLikeEntity.builder()
                         .user(user)
@@ -41,6 +44,7 @@ public class LessonLikeService {
         return LikeResult.CREATED;
     }
 
+    // 관심 레슨 등록 취소
     @Transactional
     public LikeResult unlike(Long userId, Long lessonId) {
         if (!lessonLikeRepository.existsByUserIdAndLessonId(userId, lessonId)) {
@@ -50,27 +54,35 @@ public class LessonLikeService {
         return LikeResult.DELETED;
     }
 
+    // 관심 레슨인지 확인
     @Transactional
     public boolean isliked(Long userId, Long lessonId) {
         return lessonLikeRepository.existsByUserIdAndLessonId(userId, lessonId);
     }
 
+    // 내 관심 레슨 모두 조회
+    @Transactional
+    public Page<LessonEntity> getMyLikeLessons(Long userId, Pageable pageable) {
+        return lessonLikeRepository.findAllByUserId(userId, pageable);
+    }
+
+    // 레슨에 관심있는 사람 수
     @Transactional
     public long countLikes(Long lessonId) {
         return lessonLikeRepository.countByLessonId(lessonId);
     }
 
     @Transactional
-    public boolean toggle(Long userId, Long lessonId) {
+    public LikeResult toggle(Long userId, Long lessonId) {
 
         return lessonLikeRepository.findByUserIdAndLessonId(userId, lessonId)
                 .map(existing -> {
                     lessonLikeRepository.delete(existing);
-                    return false;   // 좋아요 취소
+                    return LikeResult.DELETED;   // 좋아요 취소
                 })
                 .orElseGet(() -> {
                     like(userId, lessonId);
-                    return true;    // 좋아요
+                    return LikeResult.CREATED;    // 좋아요
                 });
     }
 }

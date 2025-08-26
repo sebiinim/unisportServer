@@ -22,63 +22,43 @@ public class LessonLikeController {
     private final LessonLikeService lessonLikeService;
 
     @PostMapping
-    @Operation(summary = "좋아요", description = "레슨이나 유저의 id가 없는 경우 오류 발생, 좋아요를 이미 누른 경우 메시지로 알려줌")
-    public ResponseEntity<?> like(
+    @Operation(summary = "관심 레슨 등록", description = "레슨이나 유저의 id가 없는 경우 오류 발생, 이미 관심 레슨인 경우 메시지로 알려줌")
+    public LessonLikeService.LikeResult like(
             @PathVariable Long lessonId,
             @RequestParam Long userId
     ) {
-        LessonLikeService.LikeResult r = lessonLikeService.like(lessonId, userId);
-        long count = lessonLikeService.countLikes(lessonId);
-
-        return switch(r) {
-            case CREATED -> ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new LikeResponse(true, "좋아요를 눌렀습니다.", count));
-            case ALREADY_EXISTS ->  ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new LikeResponse(false, "좋아요를 이미 눌렀습니다.", count));
-            default -> ResponseEntity.internalServerError().build();
-        };
+        return lessonLikeService.like(lessonId, userId);
     }
 
     @DeleteMapping
-    @Operation(summary = "좋아요 취소", description = "레슨이나 유저의 id가 없는 경우 오류 발생, 좋아요가 없는 경우 메시지로 알려줌")
-    public ResponseEntity<?> unlike(
+    @Operation(summary = "관심 레슨 등록 취소", description = "레슨이나 유저의 id가 없는 경우 오류 발생, 관심 레슨이 아닌 경우 메시지로 알려줌")
+    public LessonLikeService.LikeResult unlike(
             @PathVariable Long lessonId,
             @RequestParam Long userId
     ) {
-        LessonLikeService.LikeResult r = lessonLikeService.unlike(lessonId, userId);
-        long count = lessonLikeService.countLikes(lessonId);
-
-        return switch(r) {
-            case DELETED -> ResponseEntity.ok(new LikeResponse(false, "좋아요를 취소했습니다.", count));
-            case NOT_FOUND -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new LikeResponse(false, "좋아요 상태가 아닙니다.", count));
-            default -> ResponseEntity.internalServerError().build();
-        };
+        return lessonLikeService.unlike(lessonId, userId);
     }
 
     @PostMapping("/toggle")
-    @Operation(summary = "좋아요 토글", description = "좋아요 상태를 바꿔줌")
-    public ResponseEntity<ToggleLikeResponse> toggle(
+    @Operation(summary = "관심 레슨 토글", description = "관심 레슨 등록 상태를 바꿔줌, 이거 쓰는게 좋을듯")
+    public LessonLikeService.LikeResult toggle(
             @PathVariable Long lessonId,
             @RequestParam Long userId
     ) {
-        boolean nowLiked = lessonLikeService.toggle(lessonId, userId);
-        long count = lessonLikeService.countLikes(lessonId);
-        return ResponseEntity.ok(new ToggleLikeResponse(nowLiked, count));
+        return lessonLikeService.toggle(lessonId, userId);
     }
 
     @GetMapping("/check")
-    @Operation(summary = "좋아요를 눌렀는지 체크")
-    public ResponseEntity<IsLikedResponse> isLiked(
+    @Operation(summary = "관심 레슨에 등록된 레슨인지 확인")
+    public boolean isLiked(
             @PathVariable Long lessonId,
             @RequestParam Long userId
     ) {
-        boolean liked = lessonLikeService.isliked(lessonId, userId);
-        return ResponseEntity.ok(new IsLikedResponse(liked));
+        return lessonLikeService.isliked(lessonId, userId);
     }
 
     @GetMapping("/count")
-    @Operation(summary = "좋아요 개수 확인", description = "수업 정보 보여줄 때 여기서 좋아요 개수 가져오기")
+    @Operation(summary = "레슨을 관심 등록한 유저 수 확인", description = "수업 정보 보여줄 때 여기서 관심 유저 수 가져오기")
     public ResponseEntity<CountResponse> count(
             @PathVariable Long lessonId
     ) {
@@ -88,7 +68,5 @@ public class LessonLikeController {
 
     // --- 간단 DTOs ---
     public record LikeResponse(boolean liked, String message, long likeCount) {}
-    public record ToggleLikeResponse(boolean liked, long likeCount) {}
-    public record IsLikedResponse(boolean liked) {}
     public record CountResponse(long likeCount) {}
 }
