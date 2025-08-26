@@ -1,18 +1,30 @@
 spring:
   datasource:
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://google/${DB_NAME}
+      ?cloudSqlInstance=${CLOUDSQL_INSTANCE}
+      &socketFactory=com.google.cloud.sql.mysql.SocketFactory
+      &useUnicode=true
+      &characterEncoding=utf8
+      &useSSL=true
+      &serverTimezone=UTC
+    username: ${DB_USERNAME}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
 
   jpa:
-    show-sql: ${SPRING_JPA_SHOW_SQL}
+    show-sql: true
     hibernate:
       ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
     properties:
       hibernate:
-        format_sql: ${SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL}
-    database-platform: ${SPRING_JPA_DATABASE_PLATFORM}
+        format_sql: true
+        jdbc.time_zone: UTC
+    open-in-view: false
 
   servlet:
     multipart:
@@ -20,7 +32,7 @@ spring:
       max-request-size : 20MB
 
 server:
-  port: ${PORT:8080}     # Render가 주는 $PORT 사용, 없으면 8080
+  port: 8080     # Spring의 기본 포트는 8080
   address: 0.0.0.0       # 외부에서 접근 가능
 
   error:

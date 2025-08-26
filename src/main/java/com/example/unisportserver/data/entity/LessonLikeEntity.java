@@ -1,13 +1,14 @@
 package com.example.unisportserver.data.entity;
 
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
-@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(
     name = "lesson_like",
     uniqueConstraints = {
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
             @Index(name = "idx_lesson_like_leeon", columnList = "lesson_id"),
             @Index(name = "idx_lesson_like_user", columnList = "user_id")
     })
+@Builder
 public class LessonLikeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
