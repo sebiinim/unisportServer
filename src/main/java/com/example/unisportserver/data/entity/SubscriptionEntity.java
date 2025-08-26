@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Entity
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor @Builder
+@Table(name = "subscription")
 public class SubscriptionEntity {
 
     @Id
