@@ -27,9 +27,15 @@ public class ReservationController {
     }
 
     @DeleteMapping
-    @Operation(summary = "예약 취소", description = "userId와 lessonId 사용")
-    public ReservationResponseDto deleteReservation(@RequestParam Long lessonId, Long userId) {
-        return reservationService.deleteReservation(lessonId, userId);
+    @Operation(summary = "예약 취소(lessonId, userId)", description = "lessonId와 userId 사용")
+    public ReservationResponseDto deleteReservationByLessonIdAndUserId(@RequestParam Long lessonId, Long userId) {
+        return reservationService.deleteReservationByLessonIdAndUserId(lessonId, userId);
+    }
+
+    @DeleteMapping(value = "/{reservationId}")
+    @Operation(summary = "예약 취소(reservationId)", description = "reservationId 사용")
+    public ReservationResponseDto deleteReservationByLessonIdAndUserId(@PathVariable Long reservationId) {
+        return reservationService.deleteReservationByReservationId(reservationId);
     }
 
     @GetMapping(value = "/all")

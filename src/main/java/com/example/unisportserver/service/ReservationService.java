@@ -19,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class ReservationService {
@@ -78,9 +77,9 @@ public class ReservationService {
         return reservationMapper.toDto(reservationEntity);
     }
 
-    // 예약 취소
+    // 예약 취소(lessonId, userId)
     @Transactional
-    public ReservationResponseDto deleteReservation(Long lessonId, Long userId) {
+    public ReservationResponseDto deleteReservationByLessonIdAndUserId(Long lessonId, Long userId) {
 
         // 예약 검색
         ReservationEntity reservationEntity = reservationRepository.findByLessonIdAndUserId(lessonId, userId).orElseThrow
@@ -96,7 +95,33 @@ public class ReservationService {
 
         lessonRepository.save(lessonEntity);
 
-        // 레슨 삭제
+        // 예약 삭제
+        ReservationResponseDto reservationResponseDto = reservationMapper.toDto(reservationEntity);
+
+        reservationRepository.delete(reservationEntity);
+
+        return reservationResponseDto;
+    }
+
+    // 예약 취소(reservationId)
+    @Transactional
+    public ReservationResponseDto deleteReservationByReservationId(Long reservationId) {
+
+        // 예약 검색
+        ReservationEntity reservationEntity = reservationRepository.findById(reservationId).orElseThrow
+                (() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("Reservation with reservationId %s not found", reservationId))
+                );
+
+        // 레슨의 예약 인원 낮추기, 상태 변경하기
+        LessonEntity lessonEntity = reservationEntity.getLesson();
+
+        lessonEntity.setReserved_count(lessonEntity.getReserved_count() - 1);
+        lessonEntity.setReservation_status(ReservationStatus.AVAILABLE);
+
+        lessonRepository.save(lessonEntity);
+
+        // 예약 삭제
         ReservationResponseDto reservationResponseDto = reservationMapper.toDto(reservationEntity);
 
         reservationRepository.delete(reservationEntity);
