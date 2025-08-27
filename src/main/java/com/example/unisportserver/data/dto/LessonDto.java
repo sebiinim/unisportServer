@@ -1,5 +1,7 @@
 package com.example.unisportserver.data.dto;
 
+import com.example.unisportserver.data.entity.LessonEntity;
+import com.example.unisportserver.data.enums.ReservationStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +14,7 @@ import java.time.LocalTime;
 public class LessonDto {
     
     // TODO: 수업에 사진을 추가해봅시다
-    // 배포가 다시 되면 좋겠다
+    // TODO: 정원과 예약인원을 추가해봅시다
 
     @Schema(example = "null")
     private Long id;
@@ -32,12 +34,21 @@ public class LessonDto {
     @Schema(example = "화정체육관")
     private String location;
 
+    @Schema(example = "10", description = "수업 정원")
+    private Integer capacity;
+
+    @Schema(example = "0", description = "예약 인원")
+    private Integer reserved_count;
+
+    @Schema(example = "AVAILABLE", description = "enum(AVAILABLE | FULL)")
+    private ReservationStatus reservationStatus;
+
     @Schema(example = "1")
     private Long instructorUserId;
 
-    @Schema(example = "2025-08-18")
+    @Schema(example = "2025-09-01")
     private LocalDate lessonDate;
 
-    @Schema(example = "02:00")
+    @Schema(example = "14:00")
     private LocalTime lessonTime;
 }

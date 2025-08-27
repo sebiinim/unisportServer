@@ -27,10 +27,23 @@ public class ReservationController {
     }
 
     @DeleteMapping
-    @Operation(summary = "예약 취소", description = "lessonId로 취소")
-    public ReservationResponseDto deleteReservation(@RequestParam("lessonId") Long lessonId) {
-        return reservationService.deleteReservation(lessonId);
+    @Operation(summary = "예약 취소(lessonId, userId)", description = "lessonId와 userId 사용")
+    public ReservationResponseDto deleteReservationByLessonIdAndUserId(@RequestParam Long lessonId, Long userId) {
+        return reservationService.deleteReservationByLessonIdAndUserId(lessonId, userId);
     }
+
+    @DeleteMapping(value = "/{reservationId}")
+    @Operation(summary = "예약 취소(reservationId)", description = "reservationId 사용")
+    public ReservationResponseDto deleteReservationByLessonIdAndUserId(@PathVariable Long reservationId) {
+        return reservationService.deleteReservationByReservationId(reservationId);
+    }
+
+    @GetMapping(value = "/all")
+    @Operation(summary = "전체 예약 조회", description = "서버의 모든 예약을 조회")
+    public Page<ReservationResponseDto> getAllReservations(@Parameter(hidden = true) Pageable pageable) {
+        return reservationService.getAllReservations(pageable);
+    }
+
 
     @GetMapping(value = "/{userId}")
     @Operation(summary = "내 예약 조회", description = "유저의 전체 예약을 조회")

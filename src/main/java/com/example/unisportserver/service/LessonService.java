@@ -28,11 +28,14 @@ public class LessonService {
     // 레슨 생성
     @Transactional
     public LessonDto saveLesson(LessonDto lessonDto) {
+
+        // 강사 존재 확인
         UserEntity instructorUser = userRepository.findById(lessonDto.getInstructorUserId())
                 .orElseThrow(()-> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, String.format("User with id %s not found", lessonDto.getInstructorUserId())
                 ));
 
+        // 강사가 다른 수업을 하고 있는지 확인
         if(lessonRepository.existsByInstructorUserId(instructorUser.getId())){
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, String.format("User with id %s already has a lesson", instructorUser.getId())

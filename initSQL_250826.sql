@@ -8,7 +8,7 @@ VALUES
     (4, 'lucy234', 'pw234', 'Lucy Kim', 'lucy@example.com', 'Seoul National University', '2024004', false, 0, 0, NOW(), NOW());
 
 -- Lessons
-INSERT INTO lesson (id, sport, title, description, level, location, reserved_count, capacity, status, instructor_user_id, lesson_date, lesson_time)
+INSERT INTO lesson (id, sport, title, description, level, location, reserved_count, capacity, reservation_status, instructor_user_id, lesson_date, lesson_time)
 VALUES
     (1, '축구', '중급 축구', '기초 전술 및 체력 훈련', 2, '서울 캠퍼스 운동장', 5, 10, 'AVAILABLE', 2, '2025-09-01', '15:00:00'),
     (2, '농구', '초급 농구', '드리블 및 패스 기초', 1, '고려대 체육관', 10, 10, 'FULL', 3, '2025-09-02', '18:00:00'),
