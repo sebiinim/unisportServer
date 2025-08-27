@@ -4,6 +4,7 @@ spring:
     url: "jdbc:mysql://${PUBLIC_IP}/${DB_NAME}?allowPublicKeyRetrieval=true&useSSL=true&requireSSL=true&serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=utf8"
     # "jdbc:mysql://${PUBLIC_IP}/${DB_NAME}?cloudSqlInstance=${CLOUDSQL_INSTANCE}&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC"
     username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
