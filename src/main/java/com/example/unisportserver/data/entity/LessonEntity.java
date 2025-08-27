@@ -32,12 +32,12 @@ public class LessonEntity {
 
     private String location;
 
-    private Integer reserved_count;     // 예약 인원
-    
-    private Integer capacity;           // 수업 정원
-
-    @Enumerated(EnumType.STRING)
-    private LessonReservationStatus status;     // 정원 상태
+//    private Integer reserved_count;     // 예약 인원
+//
+//    private Integer capacity;           // 수업 정원
+//
+//    @Enumerated(EnumType.STRING)
+//    private LessonReservationStatus status;     // 정원 상태
 
     private Long instructorUserId;
 
