@@ -29,7 +29,7 @@ spring:
       max-request-size : 20MB
 
 server:
-  port: 8080     # Spring의 기본 포트는 8080
+  port: {PORT:8080}     # Spring의 기본 포트는 8080
   address: 0.0.0.0       # 외부에서 접근 가능
 
   error:
