@@ -1,6 +1,7 @@
 package com.example.unisportserver.data.entity;
 
 import com.example.unisportserver.data.dto.UserDto;
+import com.example.unisportserver.data.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,12 +33,12 @@ public class LessonEntity {
 
     private String location;
 
-//    private Integer reserved_count;     // 예약 인원
-//
-//    private Integer capacity;           // 수업 정원
-//
-//    @Enumerated(EnumType.STRING)
-//    private LessonReservationStatus status;     // 정원 상태
+    private Integer capacity;           // 수업 정원
+
+    private Integer reserved_count;     // 예약 인원
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus reservation_status;     // 정원 상태
 
     private Long instructorUserId;
 
@@ -46,6 +47,4 @@ public class LessonEntity {
     private LocalTime lessonTime;
 }
 
-enum LessonReservationStatus {
-    AVAILABLE, FULL
-}
+

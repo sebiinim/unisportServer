@@ -5,17 +5,16 @@ import com.example.unisportserver.data.dto.ReservationResponseDto;
 import com.example.unisportserver.data.entity.LessonEntity;
 import com.example.unisportserver.data.entity.ReservationEntity;
 import com.example.unisportserver.data.entity.UserEntity;
+import com.example.unisportserver.data.enums.ReservationStatus;
 import com.example.unisportserver.data.mapper.ReservationMapper;
 import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.ReservationRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -41,7 +40,7 @@ public class ReservationService {
     @Transactional
     public ReservationResponseDto saveReservation(ReservationRequestDto reservationRequestDto) {
 
-        ReservationEntity reservationEntity = new  ReservationEntity();
+        ReservationEntity reservationEntity = new ReservationEntity();
 
         // 유저 찾아서 예약 엔티티에 추가
         UserEntity userEntity = userRepository.findById(reservationRequestDto.getUserId()).orElseThrow(
@@ -58,9 +57,21 @@ public class ReservationService {
                         HttpStatus.NOT_FOUND, String.format("Lesson id %s not found", reservationRequestDto.getLessonId())
                 )
         );
+
+        // FULL 인지 체크, 예약 인원&상태 변경
+        if (lessonEntity.getReservation_status() == ReservationStatus.AVAILABLE) {
+            lessonEntity.setReserved_count(lessonEntity.getReserved_count() + 1);
+
+            if(lessonEntity.getReserved_count().equals(lessonEntity.getCapacity()) ) {
+                lessonEntity.setReservation_status(ReservationStatus.FULL);
+            }
+        } else {    // FULL 인 경우
+            throw new RuntimeException("수업의 정원이 가득 찼습니다.");
+        }
+
         reservationEntity.setLesson(lessonEntity);
 
-        reservationEntity.setCreatedAt(LocalDateTime.now());    // 현재 시간으로 설정
+        reservationEntity.setCreatedAt(LocalDateTime.now());    // 현재 시간
 
         reservationRepository.save(reservationEntity);
 
@@ -69,17 +80,35 @@ public class ReservationService {
 
     // 예약 취소
     @Transactional
-    public ReservationResponseDto deleteReservation(Long reservationId) {
-        ReservationEntity reservationEntity = reservationRepository.findById(reservationId).orElseThrow
+    public ReservationResponseDto deleteReservation(Long lessonId, Long userId) {
+
+        // 예약 검색
+        ReservationEntity reservationEntity = reservationRepository.findByLessonIdAndUserId(lessonId, userId).orElseThrow
                 (() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        String.format("Reservation with id %s not found", reservationId))
+                        String.format("Reservation with lessonId %s and userId %s not found", lessonId, userId))
         );
 
+        // 레슨의 예약 인원 낮추기, 상태 변경하기
+        LessonEntity lessonEntity = reservationEntity.getLesson();
+
+        lessonEntity.setReserved_count(lessonEntity.getReserved_count() - 1);
+        lessonEntity.setReservation_status(ReservationStatus.AVAILABLE);
+
+        lessonRepository.save(lessonEntity);
+
+        // 레슨 삭제
         ReservationResponseDto reservationResponseDto = reservationMapper.toDto(reservationEntity);
 
         reservationRepository.delete(reservationEntity);
 
         return reservationResponseDto;
+    }
+
+    
+    // 서버의 모든 예약 조회
+    @Transactional
+    public Page<ReservationResponseDto> getAllReservations(Pageable pageable) {
+        return reservationRepository.findAll(pageable).map(reservationMapper::toDto);
     }
 
     // userId로 전체 예약 조회
