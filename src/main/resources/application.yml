@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://127.0.0.1:3307/${DB_NAME}?useSSL=false&tcpKeepAlive=true&connectTimeout=10000&socketTimeout=15000&serverTimezone=Asia/Seoul&characterEncoding=utf8"
+    url: "jdbc:mysql://127.0.0.1:3307/${DB_NAME}?useSSL=false&sslMode=DISABLED&tcpKeepAlive=true&connectTimeout=10000&socketTimeout=15000&serverTimezone=Asia/Seoul&characterEncoding=utf8"
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:
@@ -28,8 +28,7 @@ spring:
       max-request-size : 20MB
 
 server:
-  port: {PORT:8080}     # Spring의 기본 포트는 8080
-  address: 0.0.0.0       # 외부에서 접근 가능
+  port: ${PORT:8080}     # Spring의 기본 포트는 8080
 
   error:
     include-message: always          # 예외 메시지 포함
@@ -40,13 +39,15 @@ server:
 #  api-key: ${OPENAI_API_KEY}
 
 gcs:
-  project-id: ${GCP_PROJECT_ID:unisportcard}
-  bucket-name: ${GCS_BUCKET:unisport-bucket-db}
+  project-id: ${GCP_PROJECT_ID:unisport-041219}
+  bucket-name: ${GCS_BUCKET:unisport-bucket}
 
 logging:
   level:
     org.springframework.core.env: DEBUG
-
+    com.zaxxer.hikari: DEBUG
+    org.hibernate.engine.jdbc.env.internal: DEBUG
+    com.mysql.cj.protocol: DEBUG
 
 management:
   endpoints:
