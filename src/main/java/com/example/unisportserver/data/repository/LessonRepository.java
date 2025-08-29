@@ -30,4 +30,6 @@ public interface LessonRepository extends JpaRepository<LessonEntity, Long> {
     Page<LessonEntity> searchAnyField(@Param("q") String q, Pageable pageable);
 
     List<LessonEntity> findAllByLevel(Integer level);
+
+    LessonEntity findByInstructorUserId(Long userId);
 }

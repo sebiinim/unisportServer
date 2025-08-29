@@ -5,6 +5,7 @@ import com.example.unisportserver.service.LessonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,12 @@ public class LessonController {
     @Operation(summary = "모든 레슨 검색")
     public List<LessonDto> getAllLessons() {
         return lessonService.getAllLessons();
+    }
+
+    @GetMapping(value = "/by-userId/{userId}")
+    @Operation(summary = "내가 개설한 레슨 검색")
+    public LessonDto getLessonsByUserId(@PathVariable Long userId) {
+        return lessonService.getLessonByUserId(userId);
     }
 
     @GetMapping(value = "/{id}")

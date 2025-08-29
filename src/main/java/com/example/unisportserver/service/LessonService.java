@@ -56,6 +56,13 @@ public class LessonService {
         return lessonMapper.toDtoList(lessonEntities);
     }
 
+    // 내 레슨 조회
+    public LessonDto getLessonByUserId(Long userId) {
+        LessonEntity lessonEntity = lessonRepository.findByInstructorUserId(userId);
+
+        return lessonMapper.toDto(lessonEntity);
+    }
+
     // lessonId로 레슨 검색
     public LessonDto getLessonById(Long id) {
         LessonEntity lessonEntity = lessonRepository.findById(id).orElseThrow(() ->
