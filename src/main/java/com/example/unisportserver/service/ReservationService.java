@@ -2,15 +2,18 @@ package com.example.unisportserver.service;
 
 import com.example.unisportserver.data.dto.ReservationRequestDto;
 import com.example.unisportserver.data.dto.ReservationResponseDto;
+import com.example.unisportserver.data.entity.AttendanceEntity;
 import com.example.unisportserver.data.entity.LessonEntity;
 import com.example.unisportserver.data.entity.ReservationEntity;
 import com.example.unisportserver.data.entity.UserEntity;
 import com.example.unisportserver.data.enums.ReservationStatus;
 import com.example.unisportserver.data.mapper.ReservationMapper;
+import com.example.unisportserver.data.repository.AttendanceRepository;
 import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.ReservationRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,19 +24,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ReservationMapper reservationMapper;
     private final UserRepository userRepository;
     private final LessonRepository lessonRepository;
-
-    public ReservationService(ReservationRepository reservationRepository, ReservationMapper reservationMapper, UserRepository userRepository, LessonRepository lessonRepository) {
-        this.reservationRepository = reservationRepository;
-        this.reservationMapper = reservationMapper;
-        this.userRepository = userRepository;
-        this.lessonRepository = lessonRepository;
-    }
+    private final AttendanceRepository attendanceRepository;
 
     // 예약 생성
     @Transactional
@@ -69,10 +67,18 @@ public class ReservationService {
         }
 
         reservationEntity.setLesson(lessonEntity);
-
-        reservationEntity.setCreatedAt(LocalDateTime.now());    // 현재 시간
+        reservationEntity.setCreatedAt(LocalDateTime.now());
 
         reservationRepository.save(reservationEntity);
+
+        // 출석 table에 추가
+        AttendanceEntity attendanceEntity = AttendanceEntity.builder()
+                        .lesson(lessonEntity)
+                        .user(userEntity)
+                        .isAttended(null)
+                        .build();
+
+        attendanceRepository.save(attendanceEntity);
 
         return reservationMapper.toDto(reservationEntity);
     }

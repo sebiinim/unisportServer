@@ -18,17 +18,27 @@ CREATE TABLE users (
 
 -- 2. lesson 테이블
 CREATE TABLE lesson (
-                        id BIGINT NOT NULL AUTO_INCREMENT,
-                        sport VARCHAR(255),
-                        title VARCHAR(255),
-                        description TEXT,
-                        level INT,
-                        location VARCHAR(255),
-                        reserved_count INT,
-                        capacity INT,
-                        lesson_date DATE,
-                        PRIMARY KEY (id)
-);
+                        id BIGINT AUTO_INCREMENT PRIMARY KEY,         -- PK
+
+                        sport VARCHAR(255),                           -- 대분류 (축구)
+                        title VARCHAR(255),                           -- 중분류 (중급 축구)
+                        description TEXT,                             -- 수업 설명
+                        level INT,                                    -- 난이도
+                        location VARCHAR(255),                        -- 장소
+
+                        capacity INT,                                 -- 정원
+                        reserved_count INT,                           -- 예약 인원
+
+                        reservation_status ENUM('AVAILABLE', 'FULL'), -- 정원 상태 (enum 매핑)
+
+                        image_path VARCHAR(255),                      -- 이미지 경로
+                        is_every_week TINYINT(1),                     -- 매주 반복 여부 (BOOLEAN → tinyint)
+
+                        instructor_user_id BIGINT,                    -- 강사 유저 ID
+
+                        lesson_date DATE,                             -- 수업 날짜
+                        lesson_time TIME                              -- 수업 시간
+)
 
 -- 3. lesson_like 테이블
 CREATE TABLE lesson_like (
