@@ -1,8 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://${PUBLIC_IP}/${DB_NAME}?allowPublicKeyRetrieval=true&useSSL=true&requireSSL=true&serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=utf8"
-    # "jdbc:mysql://${PUBLIC_IP}/${DB_NAME}?cloudSqlInstance=${CLOUDSQL_INSTANCE}&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC"
+    url: "jdbc:mysql://127.0.0.1:3307/${DB_NAME}?useSSL=false&tcpKeepAlive=true&connectTimeout=10000&socketTimeout=15000&serverTimezone=Asia/Seoul&characterEncoding=utf8"
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:

@@ -1,21 +1,31 @@
-# build stage
+# (A) Cloud SQL Proxy 바이너리 가져오기용 스테이지
+FROM gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.11.5 AS proxy
+
+# (B) 빌드
 FROM maven:3.9.9-eclipse-temurin-21 AS builder
 WORKDIR /app
-
-# 1. 의존성 먼저 다운받도록 pom.xml만 복사
 COPY pom.xml ./
 RUN mvn -B -q -DskipTests dependency:go-offline
-
-# 2. 소스 복사
 COPY src ./src
-
-# 3. 패키징
 RUN mvn -B -q -DskipTests package
 
-# run stage
+# (C) 런타임
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
+
+# 앱 JAR 복사
+COPY --from=builder /app/target/*.jar /app/app.jar
+
+# Cloud SQL Proxy 바이너리 복사
+COPY --from=proxy /cloud-sql-proxy /usr/local/bin/cloud-sql-proxy
+
+# 시작 스크립트 복사
+COPY start.sh /app/start.sh
+RUN chmod +x /usr/local/bin/cloud-sql-proxy /app/start.sh
+
+# Render가 넣어주는 $PORT 사용
 ENV JAVA_OPTS=""
 EXPOSE 8080
-CMD ["sh","-c","java $JAVA_OPTS -Dserver.port=${PORT:-8080} -jar app.jar"]
+
+# start.sh가 프록시 + 앱을 함께 구동
+CMD ["/bin/sh", "/app/start.sh"]
