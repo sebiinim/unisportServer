@@ -32,7 +32,7 @@ public class SubscriptionController {
     }
 
     @DeleteMapping
-    @Operation(summary = "구독 삭제", description = "유저가 구독을 취소")
+    @Operation(summary = "구독 삭제", description = "userId로 유저가 구독을 취소")
     public SubscriptionEntity endSubscription(@RequestBody Long userId) {
 
         return subscriptionService.endSubscription(userId);
