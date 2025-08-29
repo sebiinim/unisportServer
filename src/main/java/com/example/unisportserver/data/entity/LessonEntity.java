@@ -40,6 +40,12 @@ public class LessonEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservation_status;     // 정원 상태
 
+    @Column(name = "image_path")
+    private String imagePath;
+
+    @Column(name = "is_every_week")
+    private Boolean isEveryWeek;
+
     private Long instructorUserId;
 
     private LocalDate lessonDate;

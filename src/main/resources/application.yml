@@ -40,6 +40,10 @@ server:
 #openai:
 #  api-key: ${OPENAI_API_KEY}
 
+gcs:
+  project-id: ${GCP_PROJECT_ID:unisportcard}
+  bucket-name: ${GCS_BUCKET:unisport-bucket-db}
+
 logging:
   level:
     org.springframework.core.env: DEBUG

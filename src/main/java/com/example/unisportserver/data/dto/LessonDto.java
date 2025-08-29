@@ -41,7 +41,13 @@ public class LessonDto {
     private Integer reserved_count;
 
     @Schema(example = "AVAILABLE", description = "enum(AVAILABLE | FULL)")
-    private ReservationStatus reservationStatus;
+    private ReservationStatus reservation_status;
+
+    @Schema(example = "eximageurl", description = "이미지 url")
+    private String imagePath;
+
+    @Schema(example = "1", description = "매주인지 격주인지 bool, 1이면 매주, 0이면 격주")
+    private Boolean isEveryWeek;
 
     @Schema(example = "1")
     private Long instructorUserId;
