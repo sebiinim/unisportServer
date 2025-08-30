@@ -1,13 +1,12 @@
 package com.example.unisportserver.service;
 
-import com.example.unisportserver.data.dto.LoginDto;
-import com.example.unisportserver.data.dto.RegisterDto;
+import com.example.unisportserver.data.dto.LoginRequestDto;
+import com.example.unisportserver.data.dto.RegisterRequestDto;
 import com.example.unisportserver.data.dto.UserDto;
 import com.example.unisportserver.data.entity.UserEntity;
 import com.example.unisportserver.data.mapper.UserMapper;
 import com.example.unisportserver.data.repository.UserRepository;
 import com.example.unisportserver.util.Normalizer;
-import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -15,9 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.NoSuchElementException;
-
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +25,9 @@ public class AuthService {
     private final UserMapper userMapper;
     private final Normalizer normalizer;
 
-    public UserDto login(LoginDto loginDto){
-        String loginId = normalizer.Normalize(loginDto.getLoginId());
-        String password = normalizer.Normalize(loginDto.getPassword());
+    public UserDto login(LoginRequestDto loginRequestDto) {
+        String loginId = normalizer.Normalize(loginRequestDto.getLoginId());
+        String password = normalizer.Normalize(loginRequestDto.getPassword());
 
         // loginId로 유저 검색
         UserEntity userEntity = userRepository.findByLoginId(loginId).
@@ -48,28 +46,28 @@ public class AuthService {
         }
     }
 
-    public UserDto register(RegisterDto registerDto){
+    public UserDto register(RegisterRequestDto registerRequestDto) {
 
         // 항상 소문자, 공백 없음으로 통일
-        String loginId = normalizer.Normalize(registerDto.getLoginId());
+        String loginId = normalizer.Normalize(registerRequestDto.getLoginId());
 
-        if(userRepository.existsByLoginId(loginId)){
+        if (userRepository.existsByLoginId(loginId)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 존재하는 아이디입니다.");
         }
 
         // registerDto 가지고 UserEntity 생성하기
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        String hashedPassword = encoder.encode(registerDto.getPassword());
+        String hashedPassword = encoder.encode(registerRequestDto.getPassword());
 
         try {
             UserEntity userEntity = UserEntity.builder()
-                    .loginId(registerDto.getLoginId())
+                    .loginId(registerRequestDto.getLoginId())
                     .password(hashedPassword)
-                    .name(registerDto.getName())
-                    .email(registerDto.getEmail())
-                    .university(registerDto.getUniversity())
-                    .studentNumber(registerDto.getStudentNumber())
+                    .name(registerRequestDto.getName())
+                    .email(registerRequestDto.getEmail())
+                    .university(registerRequestDto.getUniversity())
+                    .studentNumber(registerRequestDto.getStudentNumber())
                     .isInstructor(false)
                     .rating(0)
                     .reviewCount(0)
@@ -87,7 +85,7 @@ public class AuthService {
     }
 
     // DB에 중복되는 loginId가 있는지 확인, T/F return
-    public boolean checkDuplicateId(String loginId){
+    public boolean checkDuplicateId(String loginId) {
 
         return userRepository.findByLoginId(loginId).isPresent();
     }

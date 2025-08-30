@@ -49,6 +49,9 @@ public class LessonImageController {
     }
 
     // 간단 응답 DTO
-    private record UploadResponse(String objectName) {}
-    private record UrlResponse(String url) {}
+    private record UploadResponse(String objectName) {
+    }
+
+    private record UrlResponse(String url) {
+    }
 }

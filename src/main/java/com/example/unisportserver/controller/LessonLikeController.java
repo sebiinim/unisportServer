@@ -1,19 +1,15 @@
 package com.example.unisportserver.controller;
 
-import com.example.unisportserver.data.dto.LessonDto;
+import com.example.unisportserver.data.dto.LessonResponseDto;
 import com.example.unisportserver.service.LessonLikeService;
 import com.example.unisportserver.service.LessonService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,13 +58,12 @@ public class LessonLikeController {
 
     @GetMapping("/user-like-lesson/{userId}")
     @Operation(summary = "유저의 관심 레슨 모두 조회")
-    public Page<LessonDto> getLikedLessons(
-            @PathVariable Long userId,
-            @Parameter(hidden = true) Pageable pageable) {
-        return lessonLikeService.getUserLikeLessons(userId, pageable);
+    public List<LessonResponseDto> getLikedLessons(
+            @PathVariable Long userId) {
+        return lessonLikeService.getUserLikeLessons(userId);
     }
 
-    @GetMapping("/count")
+    @GetMapping("/{lessonId}/count")
     @Operation(summary = "레슨을 관심 등록한 유저 수 확인", description = "수업 정보 보여줄 때 여기서 관심 유저 수 가져오기")
     public ResponseEntity<CountResponse> count(
             @PathVariable Long lessonId
@@ -78,6 +73,9 @@ public class LessonLikeController {
     }
 
     // --- 간단 DTOs ---
-    public record LikeResponse(boolean liked, String message, long likeCount) {}
-    public record CountResponse(long likeCount) {}
+    public record LikeResponse(boolean liked, String message, long likeCount) {
+    }
+
+    public record CountResponse(long likeCount) {
+    }
 }

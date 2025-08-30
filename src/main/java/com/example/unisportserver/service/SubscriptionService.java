@@ -45,11 +45,7 @@ public class SubscriptionService {
 
         // 구독 조회
         SubscriptionEntity subscriptionEntity = subscriptionRepository.findByUserId(userId);
-        if (subscriptionEntity.getStartDate().isBefore(LocalDate.now()) && subscriptionEntity.getEndDate().isAfter(LocalDate.now())) {
-            return true;
-        } else {
-            return false;
-        }
+        return subscriptionEntity.getStartDate().isBefore(LocalDate.now()) && subscriptionEntity.getEndDate().isAfter(LocalDate.now());
     }
 
 

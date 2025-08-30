@@ -1,7 +1,9 @@
 // src/main/java/com/example/unisportserver/service/GcsImageService.java
 package com.example.unisportserver.service;
 
-import com.google.cloud.storage.*;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,17 +20,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileUploadService {
 
-    private final Storage storage;
-
-    @Value("${gcs.bucket-name}")
-    private String bucketName;
-
     private static final Set<String> ALLOWED_TYPES = Set.of(
             MediaType.IMAGE_JPEG_VALUE,
             MediaType.IMAGE_PNG_VALUE,
             "image/webp",
             MediaType.IMAGE_GIF_VALUE
     );
+    private final Storage storage;
+    @Value("${gcs.bucket-name}")
+    private String bucketName;
 
     public String uploadLessonImage(Long lessonId, MultipartFile file) {
         if (file.isEmpty()) throw new IllegalArgumentException("빈 파일입니다.");

@@ -9,10 +9,13 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reservation", 
+@Table(name = "reservation",
         // 수업 중복 예약 방지
         uniqueConstraints = @UniqueConstraint(name = "uk_reservation_user_lesson", columnNames = {"user_id", "lesson_id"}))
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReservationEntity {
 
     @Id

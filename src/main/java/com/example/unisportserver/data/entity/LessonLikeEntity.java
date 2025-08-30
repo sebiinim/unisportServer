@@ -1,8 +1,9 @@
 package com.example.unisportserver.data.entity;
 
-import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -10,14 +11,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(
-    name = "lesson_like",
-    uniqueConstraints = {
-            @UniqueConstraint(name = "uk_lesson_like_user_lesson", columnNames = {"user_id", "lesson_id"})
-    },
-    indexes = {
-            @Index(name = "idx_lesson_like_leeon", columnList = "lesson_id"),
-            @Index(name = "idx_lesson_like_user", columnList = "user_id")
-    })
+        name = "lesson_like",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_lesson_like_user_lesson", columnNames = {"user_id", "lesson_id"})
+        },
+        indexes = {
+                @Index(name = "idx_lesson_like_leeon", columnList = "lesson_id"),
+                @Index(name = "idx_lesson_like_user", columnList = "user_id")
+        })
 @Builder
 public class LessonLikeEntity {
     @Id

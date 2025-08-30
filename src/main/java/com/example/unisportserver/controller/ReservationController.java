@@ -4,14 +4,12 @@ import com.example.unisportserver.data.dto.ReservationRequestDto;
 import com.example.unisportserver.data.dto.ReservationResponseDto;
 import com.example.unisportserver.service.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,24 +38,24 @@ public class ReservationController {
 
     @GetMapping(value = "/all")
     @Operation(summary = "전체 예약 조회", description = "서버의 모든 예약을 조회")
-    public Page<ReservationResponseDto> getAllReservations(@Parameter(hidden = true) Pageable pageable) {
-        return reservationService.getAllReservations(pageable);
+    public List<ReservationResponseDto> getAllReservations() {
+        return reservationService.getAllReservations();
     }
 
 
     @GetMapping(value = "/{userId}")
     @Operation(summary = "내 예약 조회", description = "유저의 전체 예약을 조회")
-    public Page<ReservationResponseDto> getReservationsByUserId(@PathVariable Long userId, @Parameter(hidden = true) Pageable pageable) {
-        return reservationService.getReservationsByUserId(userId, pageable);
+    public List<ReservationResponseDto> getReservationsByUserId(@PathVariable Long userId) {
+        return reservationService.getReservationsByUserId(userId);
     }
 
     @GetMapping(value = "/{userId}/{date}")
     @Operation(summary = "특정 날짜 예약 조회", description = "유저의 특정 날짜 예약을 조회")
-    public Page<ReservationResponseDto> getReservationsByUserIdAndDate(
-            @PathVariable Long userId, @PathVariable LocalDate date, @Parameter(hidden = true) Pageable pageable
+    public List<ReservationResponseDto> getReservationsByUserIdAndDate(
+            @PathVariable Long userId, @PathVariable LocalDate date
     ) {
         return reservationService.getReservationsByUserIdAndDate(
-                userId, date, pageable);
+                userId, date);
     }
 
 

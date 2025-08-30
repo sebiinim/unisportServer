@@ -1,19 +1,18 @@
 package com.example.unisportserver.data.mapper;
 
-import com.example.unisportserver.data.dto.LessonDto;
+import com.example.unisportserver.data.dto.LessonRequestDto;
+import com.example.unisportserver.data.dto.LessonResponseDto;
 import com.example.unisportserver.data.entity.LessonEntity;
 import org.mapstruct.Mapper;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface LessonMapper {
 
-    LessonEntity toEntity(LessonDto lessonDto);
+    LessonEntity toEntity(LessonRequestDto lessonRequestDto);
 
-    LessonDto toDto(LessonEntity entity);
+    LessonResponseDto toDto(LessonEntity lessonEntity);
 
-    List<LessonDto> toDtoList(List<LessonEntity> lessonEntities);
+    List<LessonResponseDto> toDtoList(List<LessonEntity> lessonEntities);
 }

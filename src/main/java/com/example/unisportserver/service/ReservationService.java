@@ -13,16 +13,14 @@ import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.ReservationRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import jnr.constants.platform.Local;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -65,11 +63,11 @@ public class ReservationService {
         }
 
         // FULL 인지 체크, 예약 인원&상태 변경
-        if (lessonEntity.getReservation_status() == ReservationStatus.AVAILABLE) {
-            lessonEntity.setReserved_count(lessonEntity.getReserved_count() + 1);
+        if (lessonEntity.getReservationStatus() == ReservationStatus.AVAILABLE) {
+            lessonEntity.setReservedCount(lessonEntity.getReservedCount() + 1);
 
-            if(lessonEntity.getReserved_count().equals(lessonEntity.getCapacity()) ) {
-                lessonEntity.setReservation_status(ReservationStatus.FULL);
+            if (lessonEntity.getReservedCount().equals(lessonEntity.getCapacity())) {
+                lessonEntity.setReservationStatus(ReservationStatus.FULL);
             }
         } else {    // FULL 인 경우
             throw new RuntimeException("수업의 정원이 가득 찼습니다.");
@@ -83,12 +81,12 @@ public class ReservationService {
 
         // 출석 table에 추가
         AttendanceEntity attendanceEntity = AttendanceEntity.builder()
-                        .lesson(lessonEntity)
-                        .user(userEntity)
-                        .isAttended(null)
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
-                        .build();
+                .lesson(lessonEntity)
+                .user(userEntity)
+                .isAttended(null)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
 
         attendanceRepository.save(attendanceEntity);
 
@@ -107,13 +105,13 @@ public class ReservationService {
         ReservationEntity reservationEntity = reservationRepository.findByLessonIdAndUserId(lessonId, userId).orElseThrow
                 (() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         String.format("Reservation with lessonId %s and userId %s not found", lessonId, userId))
-        );
+                );
 
         // 레슨의 예약 인원 낮추기, 상태 변경하기
         LessonEntity lessonEntity = reservationEntity.getLesson();
 
-        lessonEntity.setReserved_count(lessonEntity.getReserved_count() - 1);
-        lessonEntity.setReservation_status(ReservationStatus.AVAILABLE);
+        lessonEntity.setReservedCount(lessonEntity.getReservedCount() - 1);
+        lessonEntity.setReservationStatus(ReservationStatus.AVAILABLE);
 
         lessonRepository.save(lessonEntity);
 
@@ -138,8 +136,8 @@ public class ReservationService {
         // 레슨의 예약 인원 낮추기, 상태 변경하기
         LessonEntity lessonEntity = reservationEntity.getLesson();
 
-        lessonEntity.setReserved_count(lessonEntity.getReserved_count() - 1);
-        lessonEntity.setReservation_status(ReservationStatus.AVAILABLE);
+        lessonEntity.setReservedCount(lessonEntity.getReservedCount() - 1);
+        lessonEntity.setReservationStatus(ReservationStatus.AVAILABLE);
 
         lessonRepository.save(lessonEntity);
 
@@ -151,24 +149,30 @@ public class ReservationService {
         return reservationResponseDto;
     }
 
-    
+
     // 서버의 모든 예약 조회
     @Transactional
-    public Page<ReservationResponseDto> getAllReservations(Pageable pageable) {
-        return reservationRepository.findAll(pageable).map(reservationMapper::toDto);
+    public List<ReservationResponseDto> getAllReservations() {
+        List<ReservationEntity> reservationEntities = reservationRepository.findAll();
+
+        return reservationMapper.toDtoList(reservationEntities);
     }
 
     // userId로 전체 예약 조회
     @Transactional
-    public Page<ReservationResponseDto> getReservationsByUserId(Long userId, Pageable pageable) {
+    public List<ReservationResponseDto> getReservationsByUserId(Long userId) {
 
-        return reservationRepository.findAllByUserId(userId, pageable).map(reservationMapper::toDto);
+        List<ReservationEntity> reservationEntities = reservationRepository.findAllByUserId(userId);
+
+        return reservationMapper.toDtoList(reservationEntities);
     }
 
     // userId로 예약 조회
     @Transactional
-    public Page<ReservationResponseDto> getReservationsByUserIdAndDate(Long userId, LocalDate date, Pageable pageable) {
+    public List<ReservationResponseDto> getReservationsByUserIdAndDate(Long userId, LocalDate date) {
 
-        return reservationRepository.findAllByUser_IdAndLesson_LessonDate(userId, date, pageable).map(reservationMapper::toDto);
+        List<ReservationEntity> reservationEntities = reservationRepository.findAllByUser_IdAndLesson_LessonDate(userId, date);
+
+        return reservationMapper.toDtoList(reservationEntities);
     }
 }
