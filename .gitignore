@@ -35,7 +35,4 @@ build/
 ### ENV ###
 .env
 
-### google KEY ###
-gcpkey.json
-
 deploy.sh
