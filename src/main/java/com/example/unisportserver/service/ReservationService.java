@@ -2,16 +2,9 @@ package com.example.unisportserver.service;
 
 import com.example.unisportserver.data.dto.ReservationRequestDto;
 import com.example.unisportserver.data.dto.ReservationResponseDto;
-import com.example.unisportserver.data.entity.AttendanceEntity;
-import com.example.unisportserver.data.entity.LessonEntity;
-import com.example.unisportserver.data.entity.ReservationEntity;
-import com.example.unisportserver.data.entity.UserEntity;
-import com.example.unisportserver.data.enums.ReservationStatus;
+import com.example.unisportserver.data.entity.*;
 import com.example.unisportserver.data.mapper.ReservationMapper;
-import com.example.unisportserver.data.repository.AttendanceRepository;
-import com.example.unisportserver.data.repository.LessonRepository;
-import com.example.unisportserver.data.repository.ReservationRepository;
-import com.example.unisportserver.data.repository.UserRepository;
+import com.example.unisportserver.data.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,6 +24,7 @@ public class ReservationService {
     private final UserRepository userRepository;
     private final LessonRepository lessonRepository;
     private final AttendanceRepository attendanceRepository;
+    private final LessonScheduleRepository lessonScheduleRepository;
 
     // 예약 생성(출석도 생성)
     @Transactional
@@ -47,33 +41,36 @@ public class ReservationService {
         reservationEntity.setUser(userEntity);
 
 
-        // 레슨 찾아서 예약 엔티티에 추가
-        LessonEntity lessonEntity = lessonRepository.findById(reservationRequestDto.getLessonId()).orElseThrow(
+        // 레슨 일정 찾아서 예약 엔티티에 추가
+        LessonScheduleEntity lessonScheduleEntity = lessonScheduleRepository.findById(reservationRequestDto.getLessonScheduleId()).orElseThrow(
                 () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, String.format("Lesson id %s not found", reservationRequestDto.getLessonId())
+                        HttpStatus.NOT_FOUND, String.format("Lesson id %s not found", reservationRequestDto.getLessonScheduleId())
                 )
         );
 
-        boolean exists = attendanceRepository.existsByLessonAndUser(lessonEntity, userEntity);
+        // 자신의 레슨인지 확인
+        if (userEntity.getId().equals(lessonScheduleEntity.getLesson().getInstructorUserId()) ) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "자신이 강사인 수업은 예약할 수 없습니다."
+            );
+        }
+
+        // 예약 중복 확인
+        boolean exists = attendanceRepository.existsByLessonScheduleAndUser(lessonScheduleEntity, userEntity);
         if (exists) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "이미 이 수업에 대한 출석 기록이 있습니다. " + "id: " + lessonEntity.getId() + ", user: " + userEntity.getId()
+                    "이미 이 수업을 예약했습니다. " + "id: " + lessonScheduleEntity.getId() + ", user: " + userEntity.getId()
             );
         }
 
         // FULL 인지 체크, 예약 인원&상태 변경
-        if (lessonEntity.getReservationStatus() == ReservationStatus.AVAILABLE) {
-            lessonEntity.setReservedCount(lessonEntity.getReservedCount() + 1);
-
-            if (lessonEntity.getReservedCount().equals(lessonEntity.getCapacity())) {
-                lessonEntity.setReservationStatus(ReservationStatus.FULL);
-            }
-        } else {    // FULL 인 경우
+        if (lessonScheduleEntity.getReservedCount() >= lessonScheduleEntity.getCapacityOverride()) {
             throw new RuntimeException("수업의 정원이 가득 찼습니다.");
         }
 
-        reservationEntity.setLesson(lessonEntity);
+        reservationEntity.setLessonSchedule(lessonScheduleEntity);
 
         reservationEntity.setCreatedAt(LocalDateTime.now());
         reservationEntity.setUpdatedAt(LocalDateTime.now());
@@ -81,7 +78,7 @@ public class ReservationService {
 
         // 출석 table에 추가
         AttendanceEntity attendanceEntity = AttendanceEntity.builder()
-                .lesson(lessonEntity)
+                .lessonSchedule(lessonScheduleEntity)
                 .user(userEntity)
                 .isAttended(null)
                 .createdAt(LocalDateTime.now())
@@ -90,30 +87,40 @@ public class ReservationService {
 
         attendanceRepository.save(attendanceEntity);
 
-        reservationEntity.setAttenanceId(attendanceEntity.getId());
+
+        // 예약 엔티티에 방금 만든 출석 엔티티의 id를 추가
+        reservationEntity.setAttendanceId(attendanceEntity.getId());
 
         reservationRepository.save(reservationEntity);
 
         return reservationMapper.toDto(reservationEntity);
     }
 
-    // 예약 취소(lessonId, userId)
+    // 예약 취소(lessonScheduleId, userId)
     @Transactional
-    public ReservationResponseDto deleteReservationByLessonIdAndUserId(Long lessonId, Long userId) {
+    public ReservationResponseDto deleteReservationByLessonIdAndUserId(ReservationRequestDto reservationRequestDto) {
+
+        Long lessonScheduleId = reservationRequestDto.getLessonScheduleId();
+        Long userId = reservationRequestDto.getUserId();
 
         // 예약 검색
-        ReservationEntity reservationEntity = reservationRepository.findByLessonIdAndUserId(lessonId, userId).orElseThrow
+        ReservationEntity reservationEntity = reservationRepository.findByLessonScheduleIdAndUserId(lessonScheduleId, userId).orElseThrow
                 (() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        String.format("Reservation with lessonId %s and userId %s not found", lessonId, userId))
+                        String.format("Reservation with lessonScheduleId %s and userId %s not found", lessonScheduleId, userId))
                 );
 
-        // 레슨의 예약 인원 낮추기, 상태 변경하기
-        LessonEntity lessonEntity = reservationEntity.getLesson();
+        // 레슨의 예약 인원 낮추기
+        LessonScheduleEntity lessonScheduleEntity = reservationEntity.getLessonSchedule();
 
-        lessonEntity.setReservedCount(lessonEntity.getReservedCount() - 1);
-        lessonEntity.setReservationStatus(ReservationStatus.AVAILABLE);
+        lessonScheduleEntity.setReservedCount(lessonScheduleEntity.getReservedCount() - 1);
 
-        lessonRepository.save(lessonEntity);
+        lessonScheduleRepository.save(lessonScheduleEntity);
+
+
+        // 출석 삭제
+        AttendanceEntity attendanceEntity = attendanceRepository.findByLessonScheduleIdAndUserId(lessonScheduleId, userId);
+
+        attendanceRepository.delete(attendanceEntity);
 
         // 예약 삭제
         ReservationResponseDto reservationResponseDto = reservationMapper.toDto(reservationEntity);
@@ -134,12 +141,11 @@ public class ReservationService {
                 );
 
         // 레슨의 예약 인원 낮추기, 상태 변경하기
-        LessonEntity lessonEntity = reservationEntity.getLesson();
+        LessonScheduleEntity lessonScheduleEntity = reservationEntity.getLessonSchedule();
 
-        lessonEntity.setReservedCount(lessonEntity.getReservedCount() - 1);
-        lessonEntity.setReservationStatus(ReservationStatus.AVAILABLE);
+        lessonScheduleEntity.setReservedCount(lessonScheduleEntity.getReservedCount() - 1);
 
-        lessonRepository.save(lessonEntity);
+        lessonScheduleRepository.save(lessonScheduleEntity);
 
         // 예약 삭제
         ReservationResponseDto reservationResponseDto = reservationMapper.toDto(reservationEntity);
@@ -167,11 +173,11 @@ public class ReservationService {
         return reservationMapper.toDtoList(reservationEntities);
     }
 
-    // userId로 예약 조회
+    // userId로 특정 날짜 예약 조회
     @Transactional
     public List<ReservationResponseDto> getReservationsByUserIdAndDate(Long userId, LocalDate date) {
 
-        List<ReservationEntity> reservationEntities = reservationRepository.findAllByUser_IdAndLesson_LessonDate(userId, date);
+        List<ReservationEntity> reservationEntities = reservationRepository.findAllByUser_IdAndLessonSchedule_Date(userId, date);
 
         return reservationMapper.toDtoList(reservationEntities);
     }

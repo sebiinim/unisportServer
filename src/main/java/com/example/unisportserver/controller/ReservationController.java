@@ -20,14 +20,14 @@ public class ReservationController {
 
     @PostMapping
     @Operation(summary = "예약 생성", description = "Dto에 유의하세요")
-    public ReservationResponseDto createReservation(@RequestBody ReservationRequestDto dto) {
-        return reservationService.saveReservation(dto);
+    public ReservationResponseDto createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
+        return reservationService.saveReservation(reservationRequestDto);
     }
 
     @DeleteMapping
-    @Operation(summary = "예약 취소(lessonId, userId)", description = "lessonId와 userId 사용")
-    public ReservationResponseDto deleteReservationByLessonIdAndUserId(@RequestParam Long lessonId, Long userId) {
-        return reservationService.deleteReservationByLessonIdAndUserId(lessonId, userId);
+    @Operation(summary = "예약 취소(lessonScheduleId, userId)", description = "lessonId와 userId 사용")
+    public ReservationResponseDto deleteReservationByLessonIdAndUserId(@RequestBody ReservationRequestDto reservationRequestDto) {
+        return reservationService.deleteReservationByLessonIdAndUserId(reservationRequestDto);
     }
 
     @DeleteMapping(value = "/{reservationId}")

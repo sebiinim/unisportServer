@@ -27,12 +27,12 @@ public class ReservationEntity {
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_id")
-    private LessonEntity lesson;
+    @JoinColumn(name = "lesson_schedule_id")
+    private LessonScheduleEntity lessonSchedule;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
-    private Long attenanceId;   // 이 예약에 연결된 출석체크 엔티티의 id
+    private Long attendanceId;   // 이 예약에 연결된 출석체크 엔티티의 id
 }

@@ -17,9 +17,9 @@ public class ReservationResponseDto {
 
     private Long userId;
 
-    private Long lessonId;
+    private Long lessonScheduleId;
 
     private LocalDateTime createdAt;
 
-    private Long attenanceId;
+    private Long attendanceId;
 }

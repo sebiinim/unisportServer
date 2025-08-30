@@ -9,11 +9,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@Table(name = "lesson")
+@Table(name = "lesson",
+indexes = {
+        @Index(name = "ix_lesson_instructor", columnList = "instructor_user_id"),
+        @Index(name = "ix_lesson_sport_title", columnList = "sport, title")
+})
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class LessonEntity {
 
     @Id
@@ -21,34 +22,16 @@ public class LessonEntity {
     private Long id;
 
     private String sport;       // 대분류 (축구)
+    private String title;       // 소분류 (중급 축구)
+    private String description; // 수업 설명
+    private Integer level;      // 수업 난이도
 
-    private String title;       // 중분류 (중급 축구)
+    @Column(name = "instructor_user_id")
+    private Long instructorUserId;  // 강사의 유저 id
 
-    private String description;
-
-    private Integer level;
-
-    private String location;
-
-    private Integer capacity;           // 수업 정원
-
-    private Integer reservedCount;     // 예약 인원
-
-    @Enumerated(EnumType.STRING)
-    private ReservationStatus reservationStatus;     // 정원 상태
-
-    private String imagePath;
-
-    private Boolean isEveryWeek;
-
-    @Enumerated(EnumType.STRING)
-    private DayOfTheWeek dayOfTheWeek;   // 요일
-
-    private Long instructorUserId;
-
-    private LocalDate lessonDate;
-
-    private LocalTime lessonTime;
+    private String location;    // 수업 장소
+    private Integer capacity;   // 수업 정원
+    private String imagePath;   // 이미지 경로
 }
 
 

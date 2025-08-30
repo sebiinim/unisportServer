@@ -21,7 +21,7 @@ public class AttendanceEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private LessonEntity lesson;
+    private LessonScheduleEntity lessonSchedule;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity user;

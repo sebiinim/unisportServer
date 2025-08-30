@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ReservationRequestDto {
     private Long userId;
-    private Long lessonId;
+    private Long lessonScheduleId;
 }
