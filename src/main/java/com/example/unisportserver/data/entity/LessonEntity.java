@@ -1,6 +1,7 @@
 package com.example.unisportserver.data.entity;
 
 import com.example.unisportserver.data.dto.UserDto;
+import com.example.unisportserver.data.enums.DayOfTheWeek;
 import com.example.unisportserver.data.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,10 @@ public class LessonEntity {
 
     @Column(name = "is_every_week")
     private Boolean isEveryWeek;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "day_of_the_week", nullable = false)
+    private DayOfTheWeek dayOfTheWeek;   // 요일
 
     private Long instructorUserId;
 
