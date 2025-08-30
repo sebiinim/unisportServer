@@ -4,13 +4,11 @@ import com.example.unisportserver.data.dto.AttendanceRequestDto;
 import com.example.unisportserver.data.dto.AttendanceResponseDto;
 import com.example.unisportserver.service.AttendanceService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,9 +34,9 @@ public class AttendanceController {
 
     @GetMapping(value = "/{lessonId}")
     @Operation(summary = "레슨의 출석 현황 확인", description = "레슨의 전체 출석자를 체크")
-    public Page<AttendanceResponseDto> getAttendance(@PathVariable Long lessonId, @Parameter(hidden = true) Pageable pageable) {
+    public List<AttendanceResponseDto> getAttendance(@PathVariable Long lessonId) {
 
-        return attendanceService.getAttendanceByLessonId(lessonId, pageable);
+        return attendanceService.getAttendanceByLessonId(lessonId);
     }
 
 }

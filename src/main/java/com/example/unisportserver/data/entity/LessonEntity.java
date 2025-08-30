@@ -1,13 +1,9 @@
 package com.example.unisportserver.data.entity;
 
-import com.example.unisportserver.data.dto.UserDto;
 import com.example.unisportserver.data.enums.DayOfTheWeek;
 import com.example.unisportserver.data.enums.ReservationStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -36,19 +32,16 @@ public class LessonEntity {
 
     private Integer capacity;           // 수업 정원
 
-    private Integer reserved_count;     // 예약 인원
+    private Integer reservedCount;     // 예약 인원
 
     @Enumerated(EnumType.STRING)
-    private ReservationStatus reservation_status;     // 정원 상태
+    private ReservationStatus reservationStatus;     // 정원 상태
 
-    @Column(name = "image_path")
     private String imagePath;
 
-    @Column(name = "is_every_week")
     private Boolean isEveryWeek;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "day_of_the_week", nullable = false)
     private DayOfTheWeek dayOfTheWeek;   // 요일
 
     private Long instructorUserId;

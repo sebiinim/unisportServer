@@ -1,13 +1,10 @@
 package com.example.unisportserver.data.mapper;
 
-import com.example.unisportserver.data.dto.LessonDto;
 import com.example.unisportserver.data.dto.ReservationRequestDto;
 import com.example.unisportserver.data.dto.ReservationResponseDto;
-import com.example.unisportserver.data.entity.LessonEntity;
 import com.example.unisportserver.data.entity.ReservationEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 import java.util.List;
 

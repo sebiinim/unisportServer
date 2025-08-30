@@ -4,15 +4,14 @@ import com.example.unisportserver.data.dto.AttendanceRequestDto;
 import com.example.unisportserver.data.dto.AttendanceResponseDto;
 import com.example.unisportserver.data.entity.AttendanceEntity;
 import com.example.unisportserver.data.entity.LessonEntity;
-import com.example.unisportserver.data.entity.UserEntity;
 import com.example.unisportserver.data.mapper.AttendanceMapper;
 import com.example.unisportserver.data.repository.AttendanceRepository;
 import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +38,7 @@ public class AttendanceService {
         );
 
         // 출석을 표시하려는 유저가 이 레슨의 강사가 아니면 오류 발생
-        if(!lessonEntity.getInstructorUserId().equals(instructorUserId)){
+        if (!lessonEntity.getInstructorUserId().equals(instructorUserId)) {
             throw new RuntimeException("User with id: " + userId + "is not the instructor of the Lesson with id: " + lessonId);
         }
 
@@ -67,7 +66,7 @@ public class AttendanceService {
         );
 
         // 출석을 표시하려는 유저가 이 레슨의 강사가 아니면 오류 발생
-        if(!lessonEntity.getInstructorUserId().equals(instructorUserId)){
+        if (!lessonEntity.getInstructorUserId().equals(instructorUserId)) {
             throw new RuntimeException("User with id: " + userId + "is not the instructor of the Lesson with id: " + lessonId);
         }
 
@@ -83,9 +82,11 @@ public class AttendanceService {
 
 
     // 레슨 출석 현황 확인
-    public Page<AttendanceResponseDto> getAttendanceByLessonId(Long lessonId, Pageable pageable) {
+    public List<AttendanceResponseDto> getAttendanceByLessonId(Long lessonId) {
 
-        return attendanceRepository.findAllByLessonId(lessonId, pageable);
+        List<AttendanceEntity> attendanceEntities = attendanceRepository.findAllByLessonId(lessonId);
+
+        return attendanceMapper.toResponseDtoList(attendanceEntities);
     }
 
 

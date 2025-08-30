@@ -2,10 +2,12 @@ package com.example.unisportserver.data.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class RegisterDto {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class RegisterRequestDto {
 
     private String loginId;
     private String password;

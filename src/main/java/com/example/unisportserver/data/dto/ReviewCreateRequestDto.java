@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,7 +20,7 @@ public class ReviewCreateRequestDto {
 
     @Schema(example = "5")
     private Integer rating;
-    
+
     @Schema(example = "참 좋은 수업이네요")
     private String reviewContent;
 }
