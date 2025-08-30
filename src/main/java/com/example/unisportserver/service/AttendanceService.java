@@ -4,9 +4,11 @@ import com.example.unisportserver.data.dto.AttendanceRequestDto;
 import com.example.unisportserver.data.dto.AttendanceResponseDto;
 import com.example.unisportserver.data.entity.AttendanceEntity;
 import com.example.unisportserver.data.entity.LessonEntity;
+import com.example.unisportserver.data.entity.LessonScheduleEntity;
 import com.example.unisportserver.data.mapper.AttendanceMapper;
 import com.example.unisportserver.data.repository.AttendanceRepository;
 import com.example.unisportserver.data.repository.LessonRepository;
+import com.example.unisportserver.data.repository.LessonScheduleRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,15 +24,24 @@ public class AttendanceService {
     private final UserRepository userRepository;
 
     private final AttendanceMapper attendanceMapper;
+    private final LessonScheduleRepository lessonScheduleRepository;
 
 
-    // 레슨에 출석 표시(출석 엔티티는 이미 생성되어 있음)
+    // '출석' 표시(출석 엔티티는 이미 생성되어 있음)
     public AttendanceResponseDto markAttendanceTrue(AttendanceRequestDto attendanceRequestDto) {
 
-        Long lessonId = attendanceRequestDto.getLessonId();
+        Long lessonScheduleId = attendanceRequestDto.getLessonScheduleId();
         Long instructorUserId = attendanceRequestDto.getInstructorUserId();
         Long userId = attendanceRequestDto.getUserId();
         Boolean isAttended = attendanceRequestDto.getIsAttended();
+
+
+        // 레슨 스케줄 엔티티 찾기
+        LessonScheduleEntity lessonScheduleEntity = lessonScheduleRepository.findById(lessonScheduleId).orElseThrow(
+                () -> new RuntimeException("lessonSchedule with id: " + lessonScheduleId + " not found")
+        );
+
+        Long lessonId = lessonScheduleEntity.getLesson().getId();
 
         // 레슨 엔티티 찾기
         LessonEntity lessonEntity = lessonRepository.findById(lessonId).orElseThrow(
@@ -43,7 +54,7 @@ public class AttendanceService {
         }
 
         // 출석 엔티티 찾기
-        AttendanceEntity attendanceEntity = attendanceRepository.findByLessonIdAndUserId(lessonId, userId);
+        AttendanceEntity attendanceEntity = attendanceRepository.findByLessonScheduleIdAndUserId(lessonId, userId);
 
         attendanceEntity.setIsAttended(true);
 
@@ -52,13 +63,21 @@ public class AttendanceService {
         return attendanceMapper.toResponseDto(attendanceEntity);
     }
 
-    // 레슨에 결석 표시(출석 엔티티는 이미 생성되어 있음)
+    // '결석' 표시(출석 엔티티는 이미 생성되어 있음)
     public AttendanceResponseDto markAttendanceFalse(AttendanceRequestDto attendanceRequestDto) {
 
-        Long lessonId = attendanceRequestDto.getLessonId();
+        Long lessonScheduleId = attendanceRequestDto.getLessonScheduleId();
         Long instructorUserId = attendanceRequestDto.getInstructorUserId();
         Long userId = attendanceRequestDto.getUserId();
         Boolean isAttended = attendanceRequestDto.getIsAttended();
+
+
+        // 레슨 스케줄 엔티티 찾기
+        LessonScheduleEntity lessonScheduleEntity = lessonScheduleRepository.findById(lessonScheduleId).orElseThrow(
+                () -> new RuntimeException("lessonSchedule with id: " + lessonScheduleId + " not found")
+        );
+
+        Long lessonId = lessonScheduleEntity.getLesson().getId();
 
         // 레슨 엔티티 찾기
         LessonEntity lessonEntity = lessonRepository.findById(lessonId).orElseThrow(
@@ -71,7 +90,7 @@ public class AttendanceService {
         }
 
         // 출석 엔티티 찾기
-        AttendanceEntity attendanceEntity = attendanceRepository.findByLessonIdAndUserId(lessonId, userId);
+        AttendanceEntity attendanceEntity = attendanceRepository.findByLessonScheduleIdAndUserId(lessonId, userId);
 
         attendanceEntity.setIsAttended(false);
 
@@ -82,9 +101,9 @@ public class AttendanceService {
 
 
     // 레슨 출석 현황 확인
-    public List<AttendanceResponseDto> getAttendanceByLessonId(Long lessonId) {
+    public List<AttendanceResponseDto> getAttendanceByLessonId(Long lessonScheduleId) {
 
-        List<AttendanceEntity> attendanceEntities = attendanceRepository.findAllByLessonId(lessonId);
+        List<AttendanceEntity> attendanceEntities = attendanceRepository.findAllByLessonScheduleId(lessonScheduleId);
 
         return attendanceMapper.toResponseDtoList(attendanceEntities);
     }

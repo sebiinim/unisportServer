@@ -10,17 +10,15 @@ import java.util.List;
 public interface LessonRepository extends JpaRepository<LessonEntity, Long> {
     boolean existsByInstructorUserId(Long InstructorUserId);
 
-    List<LessonEntity> findAllByLessonDate(LocalDate lessonDate);
-
     List<LessonEntity> findAllBySport(String sport);
 
 
     @Query("""
                 SELECT l FROM LessonEntity l
-                WHERE LOWER(l.title)       LIKE LOWER(CONCAT('%', :q, '%'))
-                   OR LOWER(l.description) LIKE LOWER(CONCAT('%', :q, '%'))
-                   OR LOWER(l.sport)       LIKE LOWER(CONCAT('%', :q, '%'))
-                   OR LOWER(l.location)    LIKE LOWER(CONCAT('%', :q, '%'))
+                WHERE LOWER(l.title)       LIKE LOWER(CONCAT('%', :query, '%'))
+                   OR LOWER(l.description) LIKE LOWER(CONCAT('%', :query, '%'))
+                   OR LOWER(l.sport)       LIKE LOWER(CONCAT('%', :query, '%'))
+                   OR LOWER(l.location)    LIKE LOWER(CONCAT('%', :query, '%'))
             """)
     List<LessonEntity> searchAnyField(String query);
 

@@ -27,8 +27,8 @@ public class ReservationEntity {
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_id")
-    private LessonEntity lesson;
+    @JoinColumn(name = "lesson_schedule_id")
+    private LessonScheduleEntity lessonSchedule;
 
     private LocalDateTime createdAt;
 

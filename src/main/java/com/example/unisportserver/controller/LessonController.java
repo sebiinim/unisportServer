@@ -20,7 +20,7 @@ public class LessonController {
     private final LessonService lessonService;
 
     @PostMapping
-    @Operation(summary = "레슨 생성", description = "DTO를 잘 보고 사용해주세요")
+    @Operation(summary = "레슨 생성", description = "DTO를 잘 보고 사용해주세요, capacity 정원, intervalWeeks 몇 주마다 반복, totalCount 총 레슨 횟수, ")
     public LessonResponseDto createLesson(@RequestBody LessonRequestDto lessonRequestDto) {
         return lessonService.saveLesson(lessonRequestDto);
     }
@@ -38,7 +38,7 @@ public class LessonController {
     }
 
     @GetMapping(value = "/{id}")
-    @Operation(summary = "레슨 하나 검색")
+    @Operation(summary = "레슨 하나 검색, 스케줄 List 포함!")
     public LessonResponseDto getLessonById(@PathVariable Long id) {
         return lessonService.getLessonById(id);
     }
@@ -51,7 +51,7 @@ public class LessonController {
 
     @GetMapping(value = "/by-keyword")
     @Operation(summary = "임의 키워드로 검색", description = "레슨 통합 검색 기능, 페이지로 제공함에 유의")
-    public List<LessonResponseDto> searchAnyField(String query) {
+    public List<LessonResponseDto> searchAnyField(@RequestParam String query) {
         return lessonService.searchSimple(query);
     }
 
@@ -59,12 +59,6 @@ public class LessonController {
     @Operation(summary = "레벨로 검색")
     public List<LessonResponseDto> getLessonsByLevel(@PathVariable Integer level) {
         return lessonService.getLessonsByLevel(level);
-    }
-
-    @GetMapping(value = "/by-date")
-    @Operation(summary = "날짜로 레슨 검색", description = "날짜 형식은 2004-12-19")
-    public List<LessonResponseDto> getLessonsByDate(@RequestParam LocalDate date) {
-        return lessonService.getLessonsByDate(date);
     }
 
     @DeleteMapping(value = "/{id}")

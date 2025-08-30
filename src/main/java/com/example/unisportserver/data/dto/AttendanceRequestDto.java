@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AttendanceRequestDto {
-    Long lessonId;
+    Long lessonScheduleId;
 
     Long instructorUserId;  // 강사 id
 

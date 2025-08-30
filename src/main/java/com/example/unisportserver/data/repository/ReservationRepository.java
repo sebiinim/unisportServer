@@ -11,7 +11,7 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
 
     List<ReservationEntity> findAllByUserId(Long userId);
 
-    List<ReservationEntity> findAllByUser_IdAndLesson_LessonDate(Long userId, LocalDate date);
+    List<ReservationEntity> findAllByUser_IdAndLessonSchedule_Date(Long userId, LocalDate date);
 
-    Optional<ReservationEntity> findByLessonIdAndUserId(Long lessonId, Long userId);
+    Optional<ReservationEntity> findByLessonScheduleIdAndUserId(Long lessonScheduleId, Long userId);
 }

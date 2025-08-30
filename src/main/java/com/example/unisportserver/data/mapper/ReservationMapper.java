@@ -13,11 +13,11 @@ public interface ReservationMapper {
     ReservationEntity toEntity(ReservationRequestDto reservationRequestDto);
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "lessonId", source = "lesson.id")
+    @Mapping(target = "lessonScheduleId", source = "lessonSchedule.id")
     ReservationResponseDto toDto(ReservationEntity reservationEntity);
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "lessonId", source = "lesson.id")
+    @Mapping(target = "lessonScheduleId", source = "lessonSchedule.id")
     List<ReservationResponseDto> toDtoList(List<ReservationEntity> reservationEntityList);
 
     List<ReservationEntity> toEntityList(List<ReservationResponseDto> reservationResponseDtoList);
