@@ -1,8 +1,10 @@
 package com.example.unisportserver.service;
 
+import com.example.unisportserver.data.dto.LessonDto;
 import com.example.unisportserver.data.entity.LessonEntity;
 import com.example.unisportserver.data.entity.LessonLikeEntity;
 import com.example.unisportserver.data.entity.UserEntity;
+import com.example.unisportserver.data.mapper.LessonMapper;
 import com.example.unisportserver.data.repository.LessonLikeRepository;
 import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.UserRepository;
@@ -20,6 +22,7 @@ public class LessonLikeService {
     private final LessonLikeRepository lessonLikeRepository;
     private final LessonRepository lessonRepository;
     private final UserRepository userRepository;
+    private final LessonMapper lessonMapper;
 
     public enum LikeResult { CREATED, ALREADY_EXISTS, DELETED, NOT_FOUND }
 
@@ -60,10 +63,10 @@ public class LessonLikeService {
         return lessonLikeRepository.existsByUserIdAndLessonId(userId, lessonId);
     }
 
-    // 내 관심 레슨 모두 조회
+    // 유저의 관심 레슨 모두 조회
     @Transactional
-    public Page<LessonEntity> getMyLikeLessons(Long userId, Pageable pageable) {
-        return lessonLikeRepository.findAllByUserId(userId, pageable);
+    public Page<LessonDto> getUserLikeLessons(Long userId, Pageable pageable) {
+        return lessonLikeRepository.findLikedLessonsByUserId(userId, pageable).map(lessonMapper::toDto);
     }
 
     // 레슨에 관심있는 사람 수

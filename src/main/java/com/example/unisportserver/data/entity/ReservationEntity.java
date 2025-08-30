@@ -28,4 +28,8 @@ public class ReservationEntity {
     private LessonEntity lesson;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    private Long attenanceId;   // 이 예약에 연결된 출석체크 엔티티의 id
 }

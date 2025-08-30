@@ -13,6 +13,7 @@ import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.ReservationRepository;
 import com.example.unisportserver.data.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import jnr.constants.platform.Local;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,7 @@ public class ReservationService {
     private final LessonRepository lessonRepository;
     private final AttendanceRepository attendanceRepository;
 
-    // 예약 생성
+    // 예약 생성(출석도 생성)
     @Transactional
     public ReservationResponseDto saveReservation(ReservationRequestDto reservationRequestDto) {
 
@@ -55,6 +56,14 @@ public class ReservationService {
                 )
         );
 
+        boolean exists = attendanceRepository.existsByLessonAndUser(lessonEntity, userEntity);
+        if (exists) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "이미 이 수업에 대한 출석 기록이 있습니다. " + "id: " + lessonEntity.getId() + ", user: " + userEntity.getId()
+            );
+        }
+
         // FULL 인지 체크, 예약 인원&상태 변경
         if (lessonEntity.getReservation_status() == ReservationStatus.AVAILABLE) {
             lessonEntity.setReserved_count(lessonEntity.getReserved_count() + 1);
@@ -67,18 +76,25 @@ public class ReservationService {
         }
 
         reservationEntity.setLesson(lessonEntity);
-        reservationEntity.setCreatedAt(LocalDateTime.now());
 
-        reservationRepository.save(reservationEntity);
+        reservationEntity.setCreatedAt(LocalDateTime.now());
+        reservationEntity.setUpdatedAt(LocalDateTime.now());
+
 
         // 출석 table에 추가
         AttendanceEntity attendanceEntity = AttendanceEntity.builder()
                         .lesson(lessonEntity)
                         .user(userEntity)
                         .isAttended(null)
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
                         .build();
 
         attendanceRepository.save(attendanceEntity);
+
+        reservationEntity.setAttenanceId(attendanceEntity.getId());
+
+        reservationRepository.save(reservationEntity);
 
         return reservationMapper.toDto(reservationEntity);
     }
