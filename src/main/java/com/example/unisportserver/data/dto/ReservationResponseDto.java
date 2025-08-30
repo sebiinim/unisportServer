@@ -21,5 +21,5 @@ public class ReservationResponseDto {
 
     private LocalDateTime createdAt;
 
-    private Long attenanceId;
+    private Long attendanceId;
 }

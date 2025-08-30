@@ -34,5 +34,5 @@ public class ReservationEntity {
 
     private LocalDateTime updatedAt;
 
-    private Long attenanceId;   // 이 예약에 연결된 출석체크 엔티티의 id
+    private Long attendanceId;   // 이 예약에 연결된 출석체크 엔티티의 id
 }

@@ -89,7 +89,7 @@ public class ReservationService {
 
 
         // 예약 엔티티에 방금 만든 출석 엔티티의 id를 추가
-        reservationEntity.setAttenanceId(attendanceEntity.getId());
+        reservationEntity.setAttendanceId(attendanceEntity.getId());
 
         reservationRepository.save(reservationEntity);
 
