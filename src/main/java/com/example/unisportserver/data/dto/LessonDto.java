@@ -1,6 +1,7 @@
 package com.example.unisportserver.data.dto;
 
 import com.example.unisportserver.data.entity.LessonEntity;
+import com.example.unisportserver.data.enums.DayOfTheWeek;
 import com.example.unisportserver.data.enums.ReservationStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -48,6 +49,9 @@ public class LessonDto {
 
     @Schema(example = "1", description = "매주인지 격주인지 bool, 1이면 매주, 0이면 격주")
     private Boolean isEveryWeek;
+
+    @Schema(example = "FRIDAY", description = "요일, SUNDAY부터 SATURDAY까지 영어 대문자")
+    private DayOfTheWeek dayOfTheWeek;
 
     @Schema(example = "1")
     private Long instructorUserId;
