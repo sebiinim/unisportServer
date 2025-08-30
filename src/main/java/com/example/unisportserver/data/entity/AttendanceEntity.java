@@ -3,6 +3,8 @@ package com.example.unisportserver.data.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "attendance", uniqueConstraints = @UniqueConstraint(
         name = "uk_attendance_lesson_user", columnNames = {"lesson_id", "user_id"}
@@ -19,6 +21,10 @@ public class AttendanceEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity user;
 
-    @Column(name = "is_attended", nullable = false)
+    @Column(name = "is_attended", nullable = true)
     private Boolean isAttended;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }

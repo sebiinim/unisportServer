@@ -19,4 +19,6 @@ public class ReservationResponseDto {
     private Long lessonId;
 
     private LocalDateTime createdAt;
+
+    private Long attenanceId;
 }

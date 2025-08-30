@@ -1,5 +1,7 @@
 package com.example.unisportserver.data.dto;
 
+import java.time.LocalDateTime;
+
 public class AttendanceResponseDto {
     Long attendanceId;
 
@@ -10,4 +12,8 @@ public class AttendanceResponseDto {
     Long userId;        // 수강자 id
 
     Boolean isAttended;
+
+    LocalDateTime createdAt;
+
+    LocalDateTime updatedAt;
 }
