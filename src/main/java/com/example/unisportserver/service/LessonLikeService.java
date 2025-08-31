@@ -46,7 +46,7 @@ public class LessonLikeService {
 
     // 관심 레슨 등록 취소
     @Transactional
-    public LikeResult unlike(Long userId, Long lessonId) {
+    public LikeResult unlike(Long lessonId, Long userId) {
         if (!lessonLikeRepository.existsByUserIdAndLessonId(userId, lessonId)) {
             return LikeResult.NOT_FOUND;     // 좋아요가 없으면 무시
         }
@@ -56,7 +56,7 @@ public class LessonLikeService {
 
     // 관심 레슨인지 확인
     @Transactional
-    public boolean isliked(Long userId, Long lessonId) {
+    public boolean isliked(Long lessonId, Long userId) {
         return lessonLikeRepository.existsByUserIdAndLessonId(userId, lessonId);
     }
 
@@ -75,7 +75,7 @@ public class LessonLikeService {
     }
 
     @Transactional
-    public LikeResult toggle(Long userId, Long lessonId) {
+    public LikeResult toggle(Long lessonId, Long userId) {
 
         return lessonLikeRepository.findByUserIdAndLessonId(userId, lessonId)
                 .map(existing -> {
