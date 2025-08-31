@@ -3,10 +3,12 @@ package com.example.unisportserver.service;
 import com.example.unisportserver.data.dto.LessonRequestDto;
 import com.example.unisportserver.data.dto.LessonResponseDto;
 import com.example.unisportserver.data.dto.LessonScheduleResponseDto;
+import com.example.unisportserver.data.dto.LessonWithScheduleResponseDto;
 import com.example.unisportserver.data.entity.LessonEntity;
 import com.example.unisportserver.data.entity.LessonScheduleEntity;
 import com.example.unisportserver.data.entity.UserEntity;
 import com.example.unisportserver.data.mapper.LessonMapper;
+import com.example.unisportserver.data.mapper.LessonScheduleMapper;
 import com.example.unisportserver.data.repository.LessonRepository;
 import com.example.unisportserver.data.repository.LessonScheduleRepository;
 import com.example.unisportserver.data.repository.UserRepository;
@@ -19,9 +21,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class LessonService {
     private final LessonMapper lessonMapper;
     private final LessonScheduleRepository lessonScheduleRepository;
     private final UserRepository userRepository;
+    private final LessonScheduleMapper lessonScheduleMapper;
 
     // 레슨 개설 (스케줄 포함)
     @Transactional
@@ -189,6 +191,49 @@ public class LessonService {
         List<LessonEntity> lessonEntities = lessonRepository.findAllByLevel(level);
 
         return lessonMapper.toDtoList(lessonEntities);
+    }
+
+    // 날짜로 레슨 스케줄 검색
+    public List<LessonWithScheduleResponseDto> getLessonsWithScheduleByDate(LocalDate date) {
+        List<LessonScheduleEntity> lessonScheduleEntities = lessonScheduleRepository.findAllByDate(date);
+
+        List<LessonWithScheduleResponseDto> list = new ArrayList<LessonWithScheduleResponseDto>();
+
+        for (int i=0; i<lessonScheduleEntities.size(); i++) {
+
+            LessonScheduleEntity lessonScheduleEntity = lessonScheduleEntities.get(i);
+
+            LessonEntity lessonEntity = lessonRepository.findById(lessonScheduleEntity.getLesson().getId()).orElseThrow(
+                    () -> new RuntimeException("lesson with id " + lessonScheduleEntity.getId() + " not found")
+            );
+
+            LessonWithScheduleResponseDto lessonWithScheduleResponseDto = LessonWithScheduleResponseDto.builder()
+                    .id(lessonEntity.getId())
+                    .sport(lessonEntity.getSport())
+                    .title(lessonEntity.getTitle())
+                    .description(lessonEntity.getDescription())
+                    .level(lessonEntity.getLevel())
+                    .location(lessonEntity.getLocation())
+                    .image(lessonEntity.getImagePath())
+                    .instructorUserId(lessonEntity.getInstructorUserId())
+                    .lessondate(lessonScheduleEntity.getDate())
+                    .lessontime(lessonScheduleEntity.getStartTime()).
+                    build();
+
+            list.add(lessonWithScheduleResponseDto);
+        }
+
+        return list;
+
+//        Set<Long> lessonIdset = lessonScheduleEntities.stream().map(LessonScheduleEntity::getId).collect(Collectors.toSet());
+//
+//        if (lessonIdset.isEmpty()) {
+//            return Collections.emptyList();
+//        }
+//
+//        List<LessonEntity> lessons = lessonRepository.findAllById(lessonIdset);
+//
+//        return lessons.stream().map(lessonMapper::toDto).collect(Collectors.toList());
     }
 
     // id로 레슨 삭제

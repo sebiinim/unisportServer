@@ -12,4 +12,6 @@ public interface LessonScheduleRepository extends JpaRepository<LessonScheduleEn
     boolean existsByLessonAndDateAndStartTime(LessonEntity lessonEntity, LocalDate date, LocalTime startTime);
 
     List<LessonScheduleEntity> findAllByLessonIdOrderByDateAscStartTimeAsc(Long lessonId);
+
+    List<LessonScheduleEntity> findAllByDate(LocalDate date);
 }

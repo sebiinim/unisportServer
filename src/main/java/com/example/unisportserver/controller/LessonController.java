@@ -2,6 +2,7 @@ package com.example.unisportserver.controller;
 
 import com.example.unisportserver.data.dto.LessonRequestDto;
 import com.example.unisportserver.data.dto.LessonResponseDto;
+import com.example.unisportserver.data.dto.LessonWithScheduleResponseDto;
 import com.example.unisportserver.service.LessonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,6 +60,12 @@ public class LessonController {
     @Operation(summary = "레벨로 검색")
     public List<LessonResponseDto> getLessonsByLevel(@PathVariable Integer level) {
         return lessonService.getLessonsByLevel(level);
+    }
+
+    @GetMapping(value = "/by-date/{date}")
+    @Operation(summary = "날짜로 검색")
+    public List<LessonWithScheduleResponseDto> getLessonsByDate(@PathVariable LocalDate date) {
+        return lessonService.getLessonsWithScheduleByDate(date);
     }
 
     @DeleteMapping(value = "/{id}")
