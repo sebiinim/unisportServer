@@ -38,7 +38,7 @@ public class LessonController {
         return lessonService.getLessonByUserId(userId);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/by-lessonId/{id}")
     @Operation(summary = "레슨 하나 검색, 스케줄 List 포함!")
     public LessonResponseDto getLessonById(@PathVariable Long id) {
         return lessonService.getLessonById(id);
