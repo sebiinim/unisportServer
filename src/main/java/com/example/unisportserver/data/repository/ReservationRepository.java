@@ -1,6 +1,8 @@
 package com.example.unisportserver.data.repository;
 
+import com.example.unisportserver.data.entity.LessonScheduleEntity;
 import com.example.unisportserver.data.entity.ReservationEntity;
+import com.example.unisportserver.data.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -14,4 +16,6 @@ public interface ReservationRepository extends JpaRepository<ReservationEntity, 
     List<ReservationEntity> findAllByUser_IdAndLessonSchedule_Date(Long userId, LocalDate date);
 
     Optional<ReservationEntity> findByLessonScheduleIdAndUserId(Long lessonScheduleId, Long userId);
+
+    boolean existsByLessonScheduleAndUser(LessonScheduleEntity lessonScheduleEntity, UserEntity userEntity);
 }

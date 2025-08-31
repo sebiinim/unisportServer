@@ -57,11 +57,11 @@ public class ReservationService {
         }
 
         // 예약 중복 확인
-        boolean exists = attendanceRepository.existsByLessonScheduleAndUser(lessonScheduleEntity, userEntity);
+        boolean exists = reservationRepository.existsByLessonScheduleAndUser(lessonScheduleEntity, userEntity);
         if (exists) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "이미 이 수업을 예약했습니다. " + "id: " + lessonScheduleEntity.getId() + ", user: " + userEntity.getId()
+                    "이미 이 수업을 예약했습니다. " + "lessonId: " + lessonScheduleEntity.getId() + ", userId: " + userEntity.getId()
             );
         }
 
