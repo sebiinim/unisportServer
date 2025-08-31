@@ -61,7 +61,7 @@ public class ReservationService {
         if (exists) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "이미 이 수업을 예약했습니다. " + "lessonId: " + lessonScheduleEntity.getId() + ", userId: " + userEntity.getId()
+                    "이미 이 수업을 예약했습니다. " + "lessonScheduleId: " + lessonScheduleEntity.getId() + ", userId: " + userEntity.getId()
             );
         }
 
@@ -153,6 +153,8 @@ public class ReservationService {
         reservationRepository.delete(reservationEntity);
 
         return reservationResponseDto;
+
+        // TODO: attendance 삭제
     }
 
 
