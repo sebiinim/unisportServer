@@ -32,6 +32,8 @@ public class LessonEntity {
     private String location;    // 수업 장소
     private Integer capacity;   // 수업 정원
     private String imagePath;   // 이미지 경로
+
+    private Integer intervalWeeks;
 }
 
 

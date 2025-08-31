@@ -40,7 +40,7 @@ public class LessonRequestDto {
     @Schema(example = "2025-09-01", description = "레슨 시작 날짜, 이걸로 요일도 계산")
     private LocalDate StartDate;
 
-    @Schema(example = "16", description = "수업 총 횟수")
+    @Schema(example = "8", description = "수업 총 횟수")
     private Integer totalCount;
 
     @Schema(example = "14:00", description = "레슨 시작 시간")

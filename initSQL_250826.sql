@@ -1,202 +1,125 @@
--- create tables
--- 1. users 테이블
-CREATE TABLE users (
-                       id BIGINT NOT NULL AUTO_INCREMENT,
-                       login_id VARCHAR(255) NOT NULL UNIQUE,
-                       password VARCHAR(255) NOT NULL,
-                       name VARCHAR(255),
-                       email VARCHAR(255),
-                       university VARCHAR(255),
-                       student_number VARCHAR(255),
-                       is_instructor BOOLEAN,
-                       rating INT,
-                       review_count INT,
-                       created_at DATETIME,
-                       updated_at DATETIME,
-                       PRIMARY KEY (id)
-);
+-- ============================================
+-- Unisport sample seed data (MySQL 8.0)
+-- ============================================
 
--- 2. lesson 테이블
-CREATE TABLE lesson (
-                        id BIGINT AUTO_INCREMENT PRIMARY KEY,         -- PK
+-- (선택) 깨끗한 초기화를 원하면 주석 해제
+-- SET FOREIGN_KEY_CHECKS = 0;
+-- TRUNCATE TABLE attendance;
+-- TRUNCATE TABLE reservation;
+-- TRUNCATE TABLE lesson_like;
+-- TRUNCATE TABLE review;
+-- TRUNCATE TABLE subscription;
+-- TRUNCATE TABLE lesson_schedule;
+-- TRUNCATE TABLE lesson;
+-- TRUNCATE TABLE users;
+-- SET FOREIGN_KEY_CHECKS = 1;
 
-                        sport VARCHAR(255),                           -- 대분류 (축구)
-                        title VARCHAR(255),                           -- 중분류 (중급 축구)
-                        description TEXT,                             -- 수업 설명
-                        level INT,                                    -- 난이도
-                        location VARCHAR(255),                        -- 장소
-
-                        capacity INT,                                 -- 정원
-                        reserved_count INT,                           -- 예약 인원
-
-                        Reservation_status ENUM('AVAILABLE', 'FULL'), -- 정원 상태 (enum 매핑)
-
-                        image_path VARCHAR(255),                      -- 이미지 경로
-                        is_every_week TINYINT(1),                     -- 매주 반복 여부 (BOOLEAN → tinyint)
-
-                        instructor_user_id BIGINT,                    -- 강사 유저 ID
-
-                        lesson_date DATE,                             -- 수업 날짜
-                        lesson_time TIME                              -- 수업 시간
-)
-
--- 3. lesson_like 테이블
-CREATE TABLE lesson_like (
-                             id BIGINT NOT NULL AUTO_INCREMENT,
-                             user_id BIGINT,
-                             lesson_id BIGINT,
-                             created_at DATETIME,
-                             PRIMARY KEY (id),
-                             CONSTRAINT uk_lesson_like_user_lesson UNIQUE (user_id, lesson_id),
-                             KEY idx_lesson_like_leeon (lesson_id),
-                             KEY idx_lesson_like_user (user_id),
-                             CONSTRAINT fk_lesson_like_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                             CONSTRAINT fk_lesson_like_lesson FOREIGN KEY (lesson_id) REFERENCES lesson(id) ON DELETE CASCADE
-);
-
--- 4. lesson_schedule 테이블
-CREATE TABLE lesson_schedule (
-                                 id BIGINT NOT NULL AUTO_INCREMENT,
-                                 lesson_id BIGINT,
-                                 date DATE,
-                                 start_time TIME,
-                                 end_time TIME,
-                                 PRIMARY KEY (id),
-                                 CONSTRAINT fk_schedule_lesson FOREIGN KEY (lesson_id) REFERENCES lesson(id) ON DELETE CASCADE
-);
-
--- 5. reservation 테이블
-CREATE TABLE reservation (
-                             id BIGINT NOT NULL AUTO_INCREMENT,
-                             user_id BIGINT,
-                             lesson_id BIGINT,
-                             created_at DATETIME,
-                             PRIMARY KEY (id),
-                             CONSTRAINT uk_reservation_user_lesson UNIQUE (user_id, lesson_id),
-                             CONSTRAINT fk_reservation_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                             CONSTRAINT fk_reservation_lesson FOREIGN KEY (lesson_id) REFERENCES lesson(id) ON DELETE CASCADE
-);
-
--- 6. review 테이블
-CREATE TABLE review (
-                        id BIGINT NOT NULL AUTO_INCREMENT,
-                        lesson_id BIGINT,
-                        user_id BIGINT,
-                        rating INT,
-                        review_content TEXT,
-                        created_at DATETIME,
-                        PRIMARY KEY (id),
-                        CONSTRAINT uk_review_lesson_student UNIQUE (lesson_id, user_id),
-                        CONSTRAINT fk_review_lesson FOREIGN KEY (lesson_id) REFERENCES lesson(id) ON DELETE CASCADE,
-                        CONSTRAINT fk_review_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- 7. subscription 테이블
-CREATE TABLE subscription (
-                              id BIGINT NOT NULL AUTO_INCREMENT,
-                              user_id BIGINT,
-                              start_date DATE,
-                              end_date DATE,
-                              status VARCHAR(255),
-                              PRIMARY KEY (id),
-                              CONSTRAINT fk_subscription_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
-
--- add values
--- Users
-INSERT INTO users (id, login_id, password, name, email, university, student_number, is_instructor, rating, review_count, created_at, updated_at)
+-- 1) USERS
+INSERT INTO users
+(id, email, login_id, name, password, student_number, university,
+ rating, review_count, is_instructor, created_at, updated_at)
 VALUES
-    (1, 'john123', 'pw123', 'John Doe', 'john@example.com', 'Korea University', '2024001', false, 5, 2, NOW(), NOW()),
-    (2, 'jane456', 'pw456', 'Jane Smith', 'jane@example.com', 'Korea University', '2024002', true, 4, 3, NOW(), NOW()),
-    (3, 'mike789', 'pw789', 'Mike Lee', 'mike@example.com', 'Yonsei University', '2024003', true, 0, 0, NOW(), NOW()),
-    (4, 'lucy234', 'pw234', 'Lucy Kim', 'lucy@example.com', 'Seoul National University', '2024004', false, 0, 0, NOW(), NOW());
+    (1, 'inst.alice@example.com', 'inst_alice', 'Alice Kim',
+     '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', '20230001', 'Korea Univ',
+     5, 2, b'1', '2025-08-31 05:00:00.000000', '2025-08-31 05:00:00.000000'),
+    (2, 'inst.bob@example.com',   'inst_bob',   'Bob Lee',
+     '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', '20230002', 'Korea Univ',
+     4, 1, b'1', '2025-08-31 05:01:00.000000', '2025-08-31 05:01:00.000000'),
+    (3, 'charlie@example.com',    'charlie',    'Charlie Park',
+     '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', '202412345', 'Korea Univ',
+     0, 0, b'0', '2025-08-31 05:02:00.000000', '2025-08-31 05:02:00.000000'),
+    (4, 'dana@example.com',       'dana',       'Dana Choi',
+     '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', '202412346', 'Korea Univ',
+     0, 0, b'0', '2025-08-31 05:03:00.000000', '2025-08-31 05:03:00.000000'),
+    (5, 'evan@example.com',       'evan',       'Evan Jung',
+     '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', '202412347', 'Korea Univ',
+     0, 0, b'0', '2025-08-31 05:04:00.000000', '2025-08-31 05:04:00.000000');
 
--- Lessons
-INSERT INTO lesson (id, sport, title, description, level, location, reserved_count, capacity, ReservationStatus, instructor_user_id, lesson_date, lesson_time)
+-- 2) LESSON (instructor_user_id는 논리적 참조; FK는 없지만 users.id를 맞춰 둠)
+INSERT INTO lesson
+(id, sport, title, description, level, location, capacity, reserved_count,
+ reservation_status, image_path, is_every_week, instructor_user_id,
+ day_of_the_week, lesson_date, lesson_time)
 VALUES
-    (1, '축구', '중급 축구', '기초 전술 및 체력 훈련', 2, '서울 캠퍼스 운동장', 5, 10, 'AVAILABLE', 2, '2025-09-01', '15:00:00'),
-    (2, '농구', '초급 농구', '드리블 및 패스 기초', 1, '고려대 체육관', 10, 10, 'FULL', 3, '2025-09-02', '18:00:00'),
-    (3, '요가', '힐링 요가', '호흡과 스트레칭', 1, '강남 요가센터', 3, 12, 'AVAILABLE', 3, '2025-09-03', '10:00:00');
+    (10, '축구', '초급 축구', '기초 패스/드리블', 1, '화정체육관', 10, 3,
+     'AVAILABLE', '/img/lesson10.jpg', b'1', 1,
+     'TUESDAY', NULL, '14:00:00.000000'),
 
--- Reservations
-INSERT INTO reservation (id, user_id, lesson_id, created_at)
+    (11, '요가', '중급 요가', '밸런스 & 코어', 2, 'KU 피트니스', 8, 2,
+     'AVAILABLE', '/img/lesson11.jpg', b'1', 2,
+     'THURSDAY', NULL, '18:00:00.000000'),
+
+    (12, '농구', '원데이 농구 클리닉', '슛 폼 교정', 1, '체육관 A', 5, 1,
+     'AVAILABLE', '/img/lesson12.jpg', b'0', 2,
+     'WEDNESDAY', '2025-09-03', '16:00:00.000000');
+
+-- 3) LESSON_SCHEDULE (각 lesson에 1~2개 세션)
+INSERT INTO lesson_schedule
+(id, lesson_id, date, start_time, end_time, reserved_count,
+ capacity_override, location_override, day_of_week)
 VALUES
-    (1, 1, 1, NOW()),
-    (2, 4, 1, NOW()),
-    (3, 1, 2, NOW());
+    -- L10 (축구) 화요일 세션 2개
+    (100, 10, '2025-09-02', '14:00:00.000000', '15:30:00.000000', 2, NULL, NULL, 'TUESDAY'),
+    (101, 10, '2025-09-09', '14:00:00.000000', '15:30:00.000000', 1, NULL, NULL, 'TUESDAY'),
 
--- Lesson Likes
-INSERT INTO lesson_like (id, user_id, lesson_id, created_at)
+    -- L11 (요가) 목요일 세션 2개
+    (102, 11, '2025-09-04', '18:00:00.000000', '19:00:00.000000', 2, NULL, NULL, 'THURSDAY'),
+    (103, 11, '2025-09-11', '18:00:00.000000', '19:00:00.000000', 0, NULL, NULL, 'THURSDAY'),
+
+    -- L12 (농구) 원데이
+    (104, 12, '2025-09-03', '16:00:00.000000', '17:30:00.000000', 1, NULL, NULL, 'WEDNESDAY');
+
+-- 4) ATTENDANCE (유일키: (lesson_id, user_id) 주의)
+INSERT INTO attendance
+(id, user_id, lesson_id, lesson_schedule_id, is_attended, created_at, updated_at)
 VALUES
-    (1, 1, 1, NOW()),
-    (2, 4, 1, NOW()),
-    (3, 1, 2, NOW());
+    -- L10
+    (200, 3, 10, 100, b'0', '2025-08-31 05:10:00.000000', '2025-08-31 05:10:00.000000'),
+    (201, 4, 10, 100, b'0', '2025-08-31 05:10:10.000000', '2025-08-31 05:10:10.000000'),
+    (202, 5, 10, 101, b'0', '2025-08-31 05:10:20.000000', '2025-08-31 05:10:20.000000'),
 
--- Reviews
-INSERT INTO review (id, lesson_id, user_id, rating, review_content, created_at)
+    -- L11
+    (203, 3, 11, 102, b'0', '2025-08-31 05:10:30.000000', '2025-08-31 05:10:30.000000'),
+    (204, 5, 11, 102, b'0', '2025-08-31 05:10:40.000000', '2025-08-31 05:10:40.000000'),
+
+    -- L12
+    (205, 4, 12, 104, b'0', '2025-08-31 05:10:50.000000', '2025-08-31 05:10:50.000000');
+
+-- 5) RESERVATION (유일키: (user_id, lesson_id) 주의)
+-- attendance_id를 FK로 걸었다면 아래와 같이 참조; 아니면 NULL 허용
+INSERT INTO reservation
+(id, user_id, lesson_id, lesson_schedule_id, attendance_id, created_at, updated_at)
 VALUES
-    (1, 1, 1, 5, '정말 유익한 수업이었어요!', NOW()),
-    (2, 1, 4, 4, '강사님이 친절했어요.', NOW()),
-    (3, 2, 1, 3, '기초 배우기엔 괜찮아요.', NOW());
+    -- L10
+    (300, 3, 10, 100, 200, '2025-08-31 05:20:00.000000', '2025-08-31 05:20:00.000000'),
+    (301, 4, 10, 100, 201, '2025-08-31 05:20:10.000000', '2025-08-31 05:20:10.000000'),
+    (302, 5, 10, 101, 202, '2025-08-31 05:20:20.000000', '2025-08-31 05:20:20.000000'),
 
--- Subscriptions
-INSERT INTO subscription (id, user_id, start_date, end_date, status)
+    -- L11
+    (303, 3, 11, 102, 203, '2025-08-31 05:20:30.000000', '2025-08-31 05:20:30.000000'),
+    (304, 5, 11, 102, 204, '2025-08-31 05:20:40.000000', '2025-08-31 05:20:40.000000'),
+
+    -- L12
+    (305, 4, 12, 104, 205, '2025-08-31 05:20:50.000000', '2025-08-31 05:20:50.000000');
+
+-- 6) REVIEW (수강생 일부가 후기 남김)
+INSERT INTO review
+(id, user_id, lesson_id, rating, review_content, created_at)
 VALUES
-    (1, 1, '2025-09-01', '2025-09-30', 'ACTIVE'),
-    (2, 4, '2025-09-01', '2025-09-15', 'EXPIRED');
+    (500, 3, 10, 5, '처음 배우기 딱 좋아요!', '2025-08-31 05:30:00.000000'),
+    (501, 5, 11, 4, '코어 자극 제대로 됨',   '2025-08-31 05:30:10.000000');
 
+-- 7) LESSON_LIKE (유일키: (user_id, lesson_id))
+INSERT INTO lesson_like
+(id, user_id, lesson_id, created_at)
+VALUES
+    (400, 3, 10, '2025-08-31 05:40:00.000000'),
+    (401, 4, 11, '2025-08-31 05:40:10.000000'),
+    (402, 5, 10, '2025-08-31 05:40:20.000000');
 
--- 추가 세팅
-
-INSERT INTO users (
-    id, email, login_id, name, rating, review_count,
-    student_number, university, password, is_instructor, updated_at
-) VALUES
-      (6,  'inst6@gmail.com',  'inst6',  '강사6',  0, 0, '2023320006', '고려대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (7,  'inst7@gmail.com',  'inst7',  '강사7',  0, 0, '2023320007', '연세대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (8,  'inst8@gmail.com',  'inst8',  '강사8',  0, 0, '2023320008', '서강대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (9,  'inst9@gmail.com',  'inst9',  '강사9',  0, 0, '2023320009', '성균관대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (10, 'inst10@gmail.com', 'inst10', '강사10', 0, 0, '2023320010', '한양대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (11, 'inst11@gmail.com', 'inst11', '강사11', 0, 0, '2023320011', '중앙대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (12, 'inst12@gmail.com', 'inst12', '강사12', 0, 0, '2023320012', '경희대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (13, 'inst13@gmail.com', 'inst13', '강사13', 0, 0, '2023320013', '건국대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (14, 'inst14@gmail.com', 'inst14', '강사14', 0, 0, '2023320014', '홍익대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (15, 'inst15@gmail.com', 'inst15', '강사15', 0, 0, '2023320015', '동국대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (16, 'inst16@gmail.com', 'inst16', '강사16', 0, 0, '2023320016', '서울대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (17, 'inst17@gmail.com', 'inst17', '강사17', 0, 0, '2023320017', 'KAIST', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (18, 'inst18@gmail.com', 'inst18', '강사18', 0, 0, '2023320018', '포항공대', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (19, 'inst19@gmail.com', 'inst19', '강사19', 0, 0, '2023320019', '부산대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (20, 'inst20@gmail.com', 'inst20', '강사20', 0, 0, '2023320020', '이화여자대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (21, 'inst21@gmail.com', 'inst21', '강사21', 0, 0, '2023320021', '숙명여자대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (22, 'inst22@gmail.com', 'inst22', '강사22', 0, 0, '2023320022', '세종대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (23, 'inst23@gmail.com', 'inst23', '강사23', 0, 0, '2023320023', '울산대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (24, 'inst24@gmail.com', 'inst24', '강사24', 0, 0, '2023320024', '전북대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW()),
-      (25, 'inst25@gmail.com', 'inst25', '강사25', 0, 0, '2023320025', '전남대학교', '$2b$10$UNpxTcsMGLSFoWfvAADo8uWo0Qx6t5/w5toKTt.TkMETkrsS8tM6u', 1, NOW());
-
-
-INSERT INTO lesson (
-    id, sport, title, description, level, location,
-    capacity, reserved_count, reservation_status,
-    instructor_user_id, lesson_date, lesson_time
-) VALUES
-      (6,  '축구',     '중급 축구',     '기초 체력과 팀 전술을 다지는 수업.',           3, '고려대 화정체육관', 16, 0, 'AVAILABLE', 6,  '2025-08-30', '10:00:00'),
-      (7,  '농구',     '초급 농구',     '드리블/패스/레이업 기본기 집중.',               1, '성북구민체육센터',   12, 0, 'AVAILABLE', 7,  '2025-08-30', '13:00:00'),
-      (8,  '테니스',   '중급 테니스',   '포핸드/백핸드 타점과 풋워크 교정.',             3, '홍릉코트',          8,  0, 'AVAILABLE', 8,  '2025-08-30', '16:00:00'),
-      (9,  '요가',     '힐링 요가',     '호흡과 스트레칭으로 유연성/회복 강화.',         2, '안암동 스튜디오',   15, 0, 'AVAILABLE', 9,  '2025-08-30', '19:00:00'),
-      (10, '필라테스', '기구 필라테스', '코어 안정성과 자세 교정 중심.',                 2, '종암 필라테스',     10, 0, 'AVAILABLE', 10, '2025-08-31', '10:00:00'),
-      (11, '수영',     '중급 수영',     '자유형 효율/턴 연습 및 지구력 향상.',           3, '동대문구 수영장',   20, 0, 'AVAILABLE', 11, '2025-08-31', '13:00:00'),
-      (12, '배드민턴', '더블스 전략',   '로테이션/넷플레이 집중 트레이닝.',              4, '청량리 체육관',     14, 0, 'AVAILABLE', 12, '2025-08-31', '16:00:00'),
-      (13, '런닝',     '10K 준비반',    '페이스 조절과 보강운동, 부상 예방.',            2, '청계천 러닝코스',   25, 0, 'AVAILABLE', 13, '2025-08-31', '19:00:00'),
-      (14, '클라이밍', '볼더링 중급',   '문제 읽기/무브 연계/그립 교정.',                3, '안암 볼더링짐',     10, 0, 'AVAILABLE', 14, '2025-09-01', '10:00:00'),
-      (15, '복싱',     '복싱 피트니스', '스텝/잽·원투 콤비네이션 및 유산소.',           2, '제기동 복싱짐',     18, 0, 'AVAILABLE', 15, '2025-09-01', '13:00:00'),
-      (16, '축구',     '고급 축구',     '빌드업/전술 전개 및 포지셔닝 디테일.',          5, '월곡 인조잔디구장', 18, 0, 'AVAILABLE', 16, '2025-09-01', '16:00:00'),
-      (17, '농구',     '슈팅 클리닉',   '캐치앤슛/풀업/코너 3점 루틴 구축.',             4, '성북구민체육센터',   12, 0, 'AVAILABLE', 17, '2025-09-01', '19:00:00'),
-      (18, '테니스',   '서브 집중반',   '토스 일관성/킥/슬라이스 서브 메커닉.',          4, '홍릉코트',          8,  0, 'AVAILABLE', 18, '2025-09-02', '10:00:00'),
-      (19, '요가',     '파워 요가',     '근지구력과 밸런스 향상 시퀀스.',                3, '안암동 스튜디오',   15, 0, 'AVAILABLE', 19, '2025-09-02', '13:00:00'),
-      (20, '필라테스', '매트 필라테스', '초급 매트 시퀀스로 코어·호흡 패턴 습득.',       1, '종암 필라테스',     10, 0, 'AVAILABLE', 20, '2025-09-02', '16:00:00'),
-      (21, '수영',     '자유형 교정',   '스트로크 효율과 킥 타이밍 교정.',               2, '동대문구 수영장',   20, 0, 'AVAILABLE', 21, '2025-09-03', '10:00:00'),
-      (22, '배드민턴', '스매시 강의',   '스윙 궤적/하체 체중이동/리커버리.',              3, '청량리 체육관',     14, 0, 'AVAILABLE', 22, '2025-09-03', '13:00:00'),
-      (23, '클라이밍', '탑로프 입문',   '확보/매듭/하강 안전교육과 기본 무브.',           1, '안암 볼더링짐',     10, 0, 'AVAILABLE', 23, '2025-09-04', '10:00:00'),
-      (24, '복싱',     '디펜스 집중',   '슬립/더킹/위빙 및 카운터 타이밍.',              4, '제기동 복싱짐',     18, 0, 'AVAILABLE', 24, '2025-09-04', '13:00:00'),
-      (25, '런닝',     '인터벌 트레이닝','400m 인터벌과 회복 조절, 주법 교정.',           3, '청계천 러닝코스',   25, 0, 'AVAILABLE', 25, '2025-09-05', '19:00:00');
+-- 8) SUBSCRIPTION
+INSERT INTO subscription
+(id, user_id, start_date, end_date, status)
+VALUES
+    (600, 3, '2025-08-01', '2025-09-30', 'ACTIVE'),
+    (601, 5, '2025-07-15', '2025-08-31', 'EXPIRED');
