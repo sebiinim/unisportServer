@@ -37,4 +37,8 @@ public interface LessonLikeRepository extends JpaRepository<LessonLikeEntity, Lo
                     """
     )
     List<LessonEntity> findLikedLessonsByUserId(@Param("userId") Long userId);
+
+    boolean existsByLessonIdAndUserId(Long userId, Long lessonId);
+
+    void deleteByLessonIdAndUserId(Long userId, Long lessonId);
 }
