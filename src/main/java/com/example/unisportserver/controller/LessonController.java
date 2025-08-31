@@ -7,6 +7,7 @@ import com.example.unisportserver.service.LessonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -32,9 +33,9 @@ public class LessonController {
         return lessonService.getAllLessons();
     }
 
-    @GetMapping(value = "/by-userId/{userId}")
+    @GetMapping(value = "/by-userId")
     @Operation(summary = "내가 개설한 레슨 검색")
-    public LessonResponseDto getLessonsByUserId(@PathVariable Long userId) {
+    public LessonResponseDto getLessonsByUserId(@RequestParam Long userId) {
         return lessonService.getLessonByUserId(userId);
     }
 
@@ -44,9 +45,9 @@ public class LessonController {
         return lessonService.getLessonById(id);
     }
 
-    @GetMapping(value = "/by-sport/{sport}")
+    @GetMapping(value = "/by-sport")
     @Operation(summary = "스포츠명으로 레슨 검색", description = "프론트에서 스포츠명을 지정해서 검색하게 해야할듯")
-    public List<LessonResponseDto> getLessonsBySport(@PathVariable String sport) {
+    public List<LessonResponseDto> getLessonsBySport(@RequestParam String sport) {
         return lessonService.getLessonsBySport(sport);
     }
 
@@ -56,15 +57,15 @@ public class LessonController {
         return lessonService.searchSimple(query);
     }
 
-    @GetMapping(value = "/by-level/{level}")
+    @GetMapping(value = "/by-level")
     @Operation(summary = "레벨로 검색")
-    public List<LessonResponseDto> getLessonsByLevel(@PathVariable Integer level) {
+    public List<LessonResponseDto> getLessonsByLevel(@RequestParam Integer level) {
         return lessonService.getLessonsByLevel(level);
     }
 
-    @GetMapping(value = "/by-date/{date}")
+    @GetMapping(value = "/by-date")
     @Operation(summary = "날짜로 검색")
-    public List<LessonWithScheduleResponseDto> getLessonsByDate(@PathVariable LocalDate date) {
+    public List<LessonWithScheduleResponseDto> getLessonsByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return lessonService.getLessonsWithScheduleByDate(date);
     }
 
