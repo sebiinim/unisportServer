@@ -47,10 +47,10 @@ public class LessonLikeService {
     // 관심 레슨 등록 취소
     @Transactional
     public LikeResult unlike(Long lessonId, Long userId) {
-        if (!lessonLikeRepository.existsByUserIdAndLessonId(userId, lessonId)) {
+        if (!lessonLikeRepository.existsByLessonIdAndUserId(lessonId, userId)) {
             return LikeResult.NOT_FOUND;     // 좋아요가 없으면 무시
         }
-        lessonLikeRepository.deleteByUserIdAndLessonId(userId, lessonId);
+        lessonLikeRepository.deleteByLessonIdAndUserId(lessonId, userId);
         return LikeResult.DELETED;
     }
 
